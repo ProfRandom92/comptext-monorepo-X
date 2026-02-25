@@ -4,15 +4,12 @@ module.exports = {
     node: true,
     es2020: true,
   },
-  extends: [
-    "eslint:recommended",
-    "@typescript-eslint/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    project: "./tsconfig.json",
+    project: ["./packages/*/tsconfig.json"],
   },
   plugins: ["@typescript-eslint"],
   rules: {
@@ -29,7 +26,6 @@ module.exports = {
       files: ["**/*.test.ts", "**/*.spec.ts"],
       env: {
         node: true,
-        vitest: true,
       },
       rules: {
         "@typescript-eslint/no-explicit-any": "off",
