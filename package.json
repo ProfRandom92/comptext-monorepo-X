@@ -1,0 +1,47 @@
+{
+  "name": "comptext-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "CompText — Domain-Specific Language for Clinical AI Preprocessing",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "dev": "npm run dev -w packages/visualizer",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint packages/*/src/**/*.{ts,tsx} --ext .ts,.tsx",
+    "lint:fix": "eslint packages/*/src/**/*.{ts,tsx} --ext .ts,.tsx --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,yml,yaml}\"",
+    "ci": "npm run lint && npm run typecheck && npm run build && npm run test",
+    "benchmark": "tsx scripts/benchmark.ts",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "tiktoken": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Alex Köllnberger",
+  "license": "MIT"
+}

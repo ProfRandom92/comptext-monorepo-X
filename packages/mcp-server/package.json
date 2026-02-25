@@ -1,0 +1,30 @@
+{
+  "name": "@comptext/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server for CompText clinical AI preprocessing pipeline",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "comptext-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "comptext",
+    "fhir",
+    "clinical-ai",
+    "medgemma"
+  ],
+  "dependencies": {
+    "@comptext/core": "file:../core",
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}
