@@ -249,7 +249,7 @@ npm run dev -w packages/visualizer
 
 ## License
 
-MIT — Alex Köllnberger
+MIT — Alex Kölnberger
 
 ---
 
@@ -259,7 +259,7 @@ If you use CompText in research:
 
 ```bibtex
 @software{koellnberger2024comptext,
-  author = {Köllnberger, Alex},
+  author = {Kölnberger, Alex},
   title = {CompText: Domain-Specific Language for Clinical AI Token Preprocessing},
   year = {2024},
   url = {https://github.com/akoellnberger/comptext},
