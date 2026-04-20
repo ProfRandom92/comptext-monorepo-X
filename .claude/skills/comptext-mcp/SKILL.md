@@ -74,9 +74,7 @@ Füge den CompText MCP Server zu deiner Claude Desktop Konfiguration hinzu:
   "mcpServers": {
     "comptext": {
       "command": "node",
-      "args": [
-        "C:/Users/contr/comptext-monorepo/packages/mcp-server/dist/index.js"
-      ],
+      "args": ["C:/Users/contr/comptext-monorepo/packages/mcp-server/dist/index.js"],
       "env": {
         "NODE_ENV": "production"
       }
@@ -205,6 +203,7 @@ resource://scenarios/list
 ```
 
 Returns:
+
 ```json
 [
   {
@@ -233,6 +232,7 @@ resource://frame/STEMI
 ```
 
 Returns:
+
 ```
 CT:v5 SC:STEMI TRI:P1
 VS[hr:118 sbp:82 spo2:91]
@@ -263,6 +263,7 @@ prompt://clinical_summary
 ```
 
 Input:
+
 ```json
 {
   "frame": "CT:v5 SC:STEMI TRI:P1...",
@@ -408,28 +409,30 @@ export default {
     pipeline: { enabled: true },
     benchmark: { enabled: true },
     validate: { enabled: true },
-    scenarios: { enabled: true }
+    scenarios: { enabled: true },
   },
   resources: {
     scenarios: { enabled: true },
     frame: { enabled: true },
-    metrics: { enabled: true }
+    metrics: { enabled: true },
   },
   prompts: {
     clinicalSummary: { enabled: true },
     triageAssessment: { enabled: true },
-    safetyCheck: { enabled: true }
-  }
-}
+    safetyCheck: { enabled: true },
+  },
+};
 ```
 
 ## Weitere Ressourcen
 
 ### Referenz-Dateien
+
 - **`packages/mcp-server/src/index.ts`** - Server Entry Point
 - **`packages/core/src/index.ts`** - Pipeline API
 - **`CLAUDE.md`** - CompText Handoff-Dokumentation
 
 ### MCP Dokumentation
+
 - Model Context Protocol Spec: https://modelcontextprotocol.io
 - Claude Desktop MCP: https://claude.ai/docs/mcp

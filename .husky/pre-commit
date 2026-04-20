@@ -1,2 +1,6 @@
+if [ -n "$CI" ] || [ -n "$SKIP_HUSKY" ]; then
+  exit 0
+fi
+
 echo "Running lint-staged..."
 npx lint-staged

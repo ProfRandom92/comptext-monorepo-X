@@ -1,20 +1,7 @@
-import { useEffect, useState } from "react"
-import {
-  TOKEN_BENCHMARKS,
-  pipeline,
-  FHIR_STEMI,
-  FHIR_SEPSIS,
-  FHIR_STROKE,
-  FHIR_ANAPHYLAXIE,
-  FHIR_DM_HYPO,
-  ALL_FHIR_BUNDLES,
-  pipelineAll,
-  serializeFrame,
-  type PipelineResult,
-  type CompTextFrame,
-} from "@comptext/core"
+import { useEffect, useState } from "react";
+import { TOKEN_BENCHMARKS, pipelineAll, serializeFrame, type PipelineResult } from "@comptext/core";
 
-import "./App.css"
+import "./App.css";
 
 // Scenario display names
 const SCENARIO_NAMES: Record<string, string> = {
@@ -23,7 +10,7 @@ const SCENARIO_NAMES: Record<string, string> = {
   stroke: "Stroke",
   anaphylaxie: "Anaphylaxie",
   dm_hypo: "DM Hypo",
-}
+};
 
 // Scenario descriptions
 const SCENARIO_DESCRIPTIONS: Record<string, string> = {
@@ -32,61 +19,57 @@ const SCENARIO_DESCRIPTIONS: Record<string, string> = {
   stroke: "71-year-old male, ischemic stroke NIHSS 14",
   anaphylaxie: "34-year-old female, anaphylactic shock post-contrast",
   dm_hypo: "62-year-old male, severe hypoglycemia BZ 1.8 mmol/L",
-}
+};
 
 function App() {
-  const [results, setResults] = useState<Record<string, PipelineResult> | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedScenario, setSelectedScenario] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<"overview" | "details" | "frame">("overview")
+  const [results, setResults] = useState<Record<string, PipelineResult> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"overview" | "details" | "frame">("overview");
 
   useEffect(() => {
     const runPipeline = async () => {
       try {
-        setLoading(true)
-        const allResults = await pipelineAll()
-        setResults(allResults)
+        setLoading(true);
+        const allResults = await pipelineAll();
+        setResults(allResults);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Pipeline failed")
+        setError(err instanceof Error ? err.message : "Pipeline failed");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    runPipeline()
-  }, [])
+    runPipeline();
+  }, []);
 
   // Calculate summary statistics
   const getSummaryStats = () => {
-    if (!results) return null
+    if (!results) return null;
 
-    const scenarios = Object.keys(results)
+    const scenarios = Object.keys(results);
     const avgReduction =
       scenarios.reduce((sum, key) => sum + results[key].benchmark.reduction_pct, 0) /
-      scenarios.length
+      scenarios.length;
 
-    const totalTokensRaw = scenarios.reduce(
-      (sum, key) => sum + results[key].input.token_count,
-      0
-    )
+    const totalTokensRaw = scenarios.reduce((sum, key) => sum + results[key].input.token_count, 0);
     const totalTokensCompressed = scenarios.reduce(
       (sum, key) => sum + (results[key].frame.tokens ?? 0),
       0
-    )
+    );
 
     return {
       avgReduction: avgReduction.toFixed(1),
       totalTokensRaw,
       totalTokensCompressed,
-      overallReduction: (
-        ((totalTokensRaw - totalTokensCompressed) / totalTokensRaw) *
-        100
-      ).toFixed(1),
-    }
-  }
+      overallReduction: (((totalTokensRaw - totalTokensCompressed) / totalTokensRaw) * 100).toFixed(
+        1
+      ),
+    };
+  };
 
-  const stats = getSummaryStats()
+  const stats = getSummaryStats();
 
   if (loading) {
     return (
@@ -95,7 +78,7 @@ function App() {
         <p>Running CompText Pipeline...</p>
         <p className="loading-subtitle">Processing 5 clinical scenarios</p>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -104,16 +87,14 @@ function App() {
         <h2>Pipeline Error</h2>
         <p>{error}</p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="app">
       <header className="app-header">
         <h1>CompText Visualizer</h1>
-        <p className="subtitle">
-          FHIR R4 → CompText Frame Pipeline | v5.0
-        </p>
+        <p className="subtitle">FHIR R4 → CompText Frame Pipeline | v5.0</p>
       </header>
 
       {stats && (
@@ -127,9 +108,7 @@ function App() {
             <span className="stat-label">Total Raw Tokens</span>
           </div>
           <div className="stat-card">
-            <span className="stat-value">
-              {stats.totalTokensCompressed.toLocaleString()}
-            </span>
+            <span className="stat-value">{stats.totalTokensCompressed.toLocaleString()}</span>
             <span className="stat-label">Total CompText Tokens</span>
           </div>
           <div className="stat-card">
@@ -215,9 +194,7 @@ function App() {
                   <div className="token-stats">
                     <div className="token-stat">
                       <span className="token-label">Raw</span>
-                      <span className="token-value raw">
-                        {benchmark.gpt4_raw.toLocaleString()}
-                      </span>
+                      <span className="token-value raw">{benchmark.gpt4_raw.toLocaleString()}</span>
                     </div>
                     <div className="token-stat">
                       <span className="token-label">NURSE</span>
@@ -239,18 +216,14 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="reduction-badge">
-                    -{benchmark.gpt4_reduction_pct}% tokens
-                  </div>
+                  <div className="reduction-badge">-{benchmark.gpt4_reduction_pct}% tokens</div>
 
                   {results?.[key] && (
                     <div className="scenario-meta">
                       <span className="gdpr-badge">
                         GDPR: {results[key].benchmark.gdpr_compliant ? "✓" : "✗"}
                       </span>
-                      <span className="latency-badge">
-                        {results[key].benchmark.total_ms}ms
-                      </span>
+                      <span className="latency-badge">{results[key].benchmark.total_ms}ms</span>
                     </div>
                   )}
                 </div>
@@ -325,27 +298,19 @@ function App() {
                   <div className="kvtc-layers">
                     <div className="layer">
                       <span className="layer-name">K-Layer (Key Extraction)</span>
-                      <span className="layer-saved">
-                        -{result.kvtc.layer_k.token_saved} tokens
-                      </span>
+                      <span className="layer-saved">-{result.kvtc.layer_k.token_saved} tokens</span>
                     </div>
                     <div className="layer">
                       <span className="layer-name">V-Layer (Value Normalization)</span>
-                      <span className="layer-saved">
-                        -{result.kvtc.layer_v.token_saved} tokens
-                      </span>
+                      <span className="layer-saved">-{result.kvtc.layer_v.token_saved} tokens</span>
                     </div>
                     <div className="layer">
                       <span className="layer-name">T-Layer (Type Encoding)</span>
-                      <span className="layer-saved">
-                        -{result.kvtc.layer_t.token_saved} tokens
-                      </span>
+                      <span className="layer-saved">-{result.kvtc.layer_t.token_saved} tokens</span>
                     </div>
                     <div className="layer">
                       <span className="layer-name">C-Layer (Context Compression)</span>
-                      <span className="layer-saved">
-                        -{result.kvtc.layer_c.token_saved} tokens
-                      </span>
+                      <span className="layer-saved">-{result.kvtc.layer_c.token_saved} tokens</span>
                     </div>
                   </div>
                   <div className="stage-stats">
@@ -446,10 +411,9 @@ function App() {
 
       <footer className="app-footer">
         <p>
-          CompText v5 | Deterministic FHIR Compression for Clinical AI |
-          {" "}
+          CompText v5 | Deterministic FHIR Compression for Clinical AI |{" "}
           <a
-            href="https://github.com/akoellnberger/comptext"
+            href="https://github.com/ProfRandom92/comptext-monorepo-X"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -458,7 +422,7 @@ function App() {
         </p>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

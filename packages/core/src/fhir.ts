@@ -17,11 +17,6 @@ export {
   FHIR_ANAPHYLAXIE,
   FHIR_DM_HYPO,
   TOKEN_BENCHMARKS,
-} from "./data.js"
+} from "./data.js";
 
-export type {
-  FHIRBundle,
-  FHIRPatient,
-  FHIRObservation,
-  FHIRCondition,
-} from "./data.js"
+export type { FHIRBundle, FHIRPatient, FHIRObservation, FHIRCondition } from "./data.js";

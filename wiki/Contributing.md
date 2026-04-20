@@ -1,6 +1,6 @@
 # Contributing
 
-> Full contributing guide: [`docs/CONTRIBUTING.md`](https://github.com/ProfRandom92/comptext-monorepo-X/blob/main/docs/CONTRIBUTING.md)
+> Full contributing guide: [`CONTRIBUTING.md`](https://github.com/ProfRandom92/comptext-monorepo-X/blob/main/CONTRIBUTING.md)
 
 ---
 
@@ -65,13 +65,13 @@ export async function pipeline(bundle) { ... }
 
 ### Naming Conventions
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Functions | camelCase | `runNURSE`, `assembleFrame` |
-| Classes | PascalCase | `CompTextError` |
-| Interfaces | PascalCase | `PipelineResult` |
-| Constants | UPPER_SNAKE | `LOINC_TO_KEY` |
-| Private fields | `_prefix` | `_meta`, `_pipe` |
+| Element        | Convention  | Example                     |
+| -------------- | ----------- | --------------------------- |
+| Functions      | camelCase   | `runNURSE`, `assembleFrame` |
+| Classes        | PascalCase  | `CompTextError`             |
+| Interfaces     | PascalCase  | `PipelineResult`            |
+| Constants      | UPPER_SNAKE | `LOINC_TO_KEY`              |
+| Private fields | `_prefix`   | `_meta`, `_pipe`            |
 
 ---
 
@@ -79,17 +79,18 @@ export async function pipeline(bundle) { ... }
 
 Format: `<type>(<scope>): <subject>`
 
-| Type | Use for |
-|------|---------|
-| `feat:` | New feature |
-| `fix:` | Bug fix |
-| `docs:` | Documentation |
+| Type        | Use for                           |
+| ----------- | --------------------------------- |
+| `feat:`     | New feature                       |
+| `fix:`      | Bug fix                           |
+| `docs:`     | Documentation                     |
 | `refactor:` | Refactoring (no behaviour change) |
-| `perf:` | Performance improvement |
-| `test:` | Adding/changing tests |
-| `chore:` | Build, tooling |
+| `perf:`     | Performance improvement           |
+| `test:`     | Adding/changing tests             |
+| `chore:`    | Build, tooling                    |
 
 **Examples:**
+
 ```
 feat(nurse): add IBAN detection regex pattern
 fix(kvtc): handle missing LOINC code gracefully
@@ -131,21 +132,21 @@ npm run lint                        # no lint errors
 
 ```typescript
 // ✓ GOOD: Descriptive, active test names
-it("removes PHI fields from Patient resource", () => { })
-it("returns P1 triage for STEMI with cardiogenic shock", () => { })
+it("removes PHI fields from Patient resource", () => {});
+it("returns P1 triage for STEMI with cardiogenic shock", () => {});
 
 // Use built-in test data
-import { FHIR_STEMI } from "../src/index.js"
-const result = await pipeline(FHIR_STEMI)
+import { FHIR_STEMI } from "../src/index.js";
+const result = await pipeline(FHIR_STEMI);
 ```
 
-| Module | Min. Coverage |
-|--------|--------------|
-| NURSE | 90% |
-| KVTC | 85% |
-| Triage | 90% |
-| Pipeline | 95% |
+| Module   | Min. Coverage |
+| -------- | ------------- |
+| NURSE    | 90%           |
+| KVTC     | 85%           |
+| Triage   | 90%           |
+| Pipeline | 95%           |
 
 ---
 
-> 📄 Full contributing guide: [`docs/CONTRIBUTING.md`](https://github.com/ProfRandom92/comptext-monorepo-X/blob/main/docs/CONTRIBUTING.md)
+> 📄 Full contributing guide: [`CONTRIBUTING.md`](https://github.com/ProfRandom92/comptext-monorepo-X/blob/main/CONTRIBUTING.md)

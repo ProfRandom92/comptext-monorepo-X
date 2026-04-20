@@ -6,13 +6,13 @@ CompText ships with **5 medically validated FHIR R4 bundles** covering the most 
 
 ## Scenario Overview
 
-| Scenario | ICD-10 | Triage | Key Values | Alert |
-|----------|--------|--------|------------|-------|
-| STEMI | I21.09 | P1 | hsTnI 4847 ng/L, sBP 82 mmHg | Jodkontrastmittel → imaging protocol change |
-| Sepsis | A41.9 + J18.9 | P1 | Laktat 4.8, PCT 38.4 µg/L | Penicillin Grade III → Ceftriaxon |
-| Stroke | I63.3 | P1 | NIHSS 14, Onset 2h | Rivaroxaban → lyse KI (NOAC < 48h) |
-| Anaphylaxie | T78.2 | P1 | sBP 64, SpO2 87% | Hymenoptera + Asthma → bronchospasm risk |
-| DM Hypo | E11.64 | P2 | BZ 1.8 mmol/L, eGFR 38 | Glibenclamid + CKD → rebound 24h monitoring |
+| Scenario    | ICD-10        | Triage | Key Values                   | Alert                                       |
+| ----------- | ------------- | ------ | ---------------------------- | ------------------------------------------- |
+| STEMI       | I21.09        | P1     | hsTnI 4847 ng/L, sBP 82 mmHg | Jodkontrastmittel → imaging protocol change |
+| Sepsis      | A41.9 + J18.9 | P1     | Laktat 4.8, PCT 38.4 µg/L    | Penicillin Grade III → Ceftriaxon           |
+| Stroke      | I63.3         | P1     | NIHSS 14, Onset 2h           | Rivaroxaban → lyse KI (NOAC < 48h)          |
+| Anaphylaxie | T78.2         | P1     | sBP 64, SpO2 87%             | Hymenoptera + Asthma → bronchospasm risk    |
+| DM Hypo     | E11.64        | P2     | BZ 1.8 mmol/L, eGFR 38       | Glibenclamid + CKD → rebound 24h monitoring |
 
 ---
 
@@ -36,8 +36,8 @@ GDPR:ART9 PHI:3f8a1c2d TS:1710509000
 **Reference**: ESC Guidelines 2023 (DOI:10.1093/eurheartj/ehad191)
 
 ```typescript
-import { FHIR_STEMI } from "@comptext/core"
-const result = await pipeline(FHIR_STEMI)
+import { FHIR_STEMI } from "@comptext/core";
+const result = await pipeline(FHIR_STEMI);
 ```
 
 ---
@@ -62,8 +62,8 @@ GDPR:ART9 PHI:7b3c9d2a TS:1710509100
 **Reference**: Surviving Sepsis Campaign 2021 (DOI:10.1097/CCM.0000000000005337)
 
 ```typescript
-import { FHIR_SEPSIS } from "@comptext/core"
-const result = await pipeline(FHIR_SEPSIS)
+import { FHIR_SEPSIS } from "@comptext/core";
+const result = await pipeline(FHIR_SEPSIS);
 ```
 
 ---
@@ -87,8 +87,8 @@ GDPR:ART9 PHI:9e4f1b8c TS:1710509200
 **Reference**: AHA/ASA Stroke Guidelines 2019 + 2022 Update
 
 ```typescript
-import { FHIR_STROKE } from "@comptext/core"
-const result = await pipeline(FHIR_STROKE)
+import { FHIR_STROKE } from "@comptext/core";
+const result = await pipeline(FHIR_STROKE);
 ```
 
 ---
@@ -111,8 +111,8 @@ GDPR:ART9 PHI:2a5d8e1f TS:1710509300
 **Reference**: WAO Anaphylaxis Guidelines 2020; DGAKI-Leitlinie 2021
 
 ```typescript
-import { FHIR_ANAPHYLAXIE } from "@comptext/core"
-const result = await pipeline(FHIR_ANAPHYLAXIE)
+import { FHIR_ANAPHYLAXIE } from "@comptext/core";
+const result = await pipeline(FHIR_ANAPHYLAXIE);
 ```
 
 ---
@@ -136,8 +136,8 @@ GDPR:ART9 PHI:8c2a4d9e TS:1710509400
 **Reference**: ADA Standards of Care 2024; DDG/DGIM 2023
 
 ```typescript
-import { FHIR_DM_HYPO } from "@comptext/core"
-const result = await pipeline(FHIR_DM_HYPO)
+import { FHIR_DM_HYPO } from "@comptext/core";
+const result = await pipeline(FHIR_DM_HYPO);
 ```
 
 ---
@@ -145,13 +145,15 @@ const result = await pipeline(FHIR_DM_HYPO)
 ## Running All Scenarios
 
 ```typescript
-import { pipelineAll, TOKEN_BENCHMARKS } from "@comptext/core"
+import { pipelineAll, TOKEN_BENCHMARKS } from "@comptext/core";
 
-const results = await pipelineAll()
+const results = await pipelineAll();
 
 for (const [id, result] of Object.entries(results)) {
-  const bench = TOKEN_BENCHMARKS[id]
-  console.log(`${id}: ${bench.gpt4_raw} → ${bench.gpt4_comptext} tokens (${bench.gpt4_reduction_pct}% reduction)`)
+  const bench = TOKEN_BENCHMARKS[id];
+  console.log(
+    `${id}: ${bench.gpt4_raw} → ${bench.gpt4_comptext} tokens (${bench.gpt4_reduction_pct}% reduction)`
+  );
 }
 ```
 
@@ -159,13 +161,13 @@ for (const [id, result] of Object.entries(results)) {
 
 ## Medical Validation Status
 
-| Test | Expected | Status |
-|------|----------|--------|
-| Contrast media ALG in STEMI frame | Present | ✅ |
-| Penicillin ALG in Sepsis frame | Present | ✅ |
-| Rivaroxaban LYSE-KI in Stroke | Present | ✅ |
-| Glibenclamid HYPO-Rebound in DM | Present | ✅ |
-| PHI fields in output | Not present | ✅ |
-| GDPR marker in all frames | Present | ✅ |
+| Test                              | Expected    | Status |
+| --------------------------------- | ----------- | ------ |
+| Contrast media ALG in STEMI frame | Present     | ✅     |
+| Penicillin ALG in Sepsis frame    | Present     | ✅     |
+| Rivaroxaban LYSE-KI in Stroke     | Present     | ✅     |
+| Glibenclamid HYPO-Rebound in DM   | Present     | ✅     |
+| PHI fields in output              | Not present | ✅     |
+| GDPR marker in all frames         | Present     | ✅     |
 
 > ⚠️ **Medical Disclaimer**: These are research/test scenarios. Values are medically plausible but not derived from real patient data. CompText must not be used in clinical decision-making without proper validation.

@@ -62,54 +62,54 @@ npm run benchmark -- --verbose
 ### Programmatische Verwendung
 
 ```typescript
-import { benchmark, benchmarkAll } from "@comptext/core"
-import { FHIR_STEMI } from "@comptext/core"
+import { benchmark, benchmarkAll } from "@comptext/core";
+import { FHIR_STEMI } from "@comptext/core";
 
 // Einzelnes Szenario
-const result = await benchmark(FHIR_STEMI)
-console.log(result.reduction_pct)  // 93.9
-console.log(result.tokens.saved)   // 1735
+const result = await benchmark(FHIR_STEMI);
+console.log(result.reduction_pct); // 93.9
+console.log(result.tokens.saved); // 1735
 
 // Alle Szenarien
-const allResults = await benchmarkAll()
+const allResults = await benchmarkAll();
 Object.entries(allResults).forEach(([name, data]) => {
-  console.log(`${name}: ${data.reduction_pct}% reduction`)
-})
+  console.log(`${name}: ${data.reduction_pct}% reduction`);
+});
 ```
 
 ## Benchmark-Metriken
 
 ### Token-Metriken
 
-| Metrik | Beschreibung | Berechnung |
-|--------|--------------|------------|
-| `tokens.input` | Originale FHIR Token-Zahl | cl100k_base |
-| `tokens.after_nurse` | Nach PHI-Scrubbing | - |
-| `tokens.after_kvtc` | Nach Kompression | - |
-| `tokens.final` | Finaler CompText Frame | - |
-| `reduction_pct` | Prozentuale Reduktion | (1 - final/input) × 100 |
-| `compression_ratio` | Kompressionsverhältnis | input / final |
+| Metrik               | Beschreibung              | Berechnung              |
+| -------------------- | ------------------------- | ----------------------- |
+| `tokens.input`       | Originale FHIR Token-Zahl | cl100k_base             |
+| `tokens.after_nurse` | Nach PHI-Scrubbing        | -                       |
+| `tokens.after_kvtc`  | Nach Kompression          | -                       |
+| `tokens.final`       | Finaler CompText Frame    | -                       |
+| `reduction_pct`      | Prozentuale Reduktion     | (1 - final/input) × 100 |
+| `compression_ratio`  | Kompressionsverhältnis    | input / final           |
 
 ### Performance-Metriken
 
-| Metrik | Beschreibung | Zielwert |
-|--------|--------------|----------|
-| `time.total_ms` | Gesamtausführungszeit | < 5ms |
-| `time.nurse_ms` | NURSE Stage Zeit | < 1ms |
-| `time.kvtc_ms` | KVTC Stage Zeit | < 3ms |
-| `time.triage_ms` | Triage Stage Zeit | < 1ms |
-| `memory.peak_mb` | Spitzen-Speicherverbrauch | < 10MB |
+| Metrik           | Beschreibung              | Zielwert |
+| ---------------- | ------------------------- | -------- |
+| `time.total_ms`  | Gesamtausführungszeit     | < 5ms    |
+| `time.nurse_ms`  | NURSE Stage Zeit          | < 1ms    |
+| `time.kvtc_ms`   | KVTC Stage Zeit           | < 3ms    |
+| `time.triage_ms` | Triage Stage Zeit         | < 1ms    |
+| `memory.peak_mb` | Spitzen-Speicherverbrauch | < 10MB   |
 
 ## Tokenizer-Vergleiche
 
 Das Benchmark-System unterstützt mehrere Tokenizer:
 
-| Tokenizer | Provider | Befehl |
-|-----------|----------|--------|
-| cl100k_base | OpenAI (GPT-4) | `--tokenizer=cl100k` |
-| o200k_base | OpenAI (GPT-4o) | `--tokenizer=o200k` |
-| Gemini | Google | `--tokenizer=gemini` |
-| estimate | Heuristik | `--tokenizer=estimate` |
+| Tokenizer   | Provider        | Befehl                 |
+| ----------- | --------------- | ---------------------- |
+| cl100k_base | OpenAI (GPT-4)  | `--tokenizer=cl100k`   |
+| o200k_base  | OpenAI (GPT-4o) | `--tokenizer=o200k`    |
+| Gemini      | Google          | `--tokenizer=gemini`   |
+| estimate    | Heuristik       | `--tokenizer=estimate` |
 
 ### Vergleich ausführen
 
@@ -119,6 +119,7 @@ npm run benchmark -- --compare-tokenizers --scenario=STEMI
 ```
 
 Beispiel-Output:
+
 ```
 Tokenizer Comparison: STEMI
 ┌─────────────┬───────────┬───────────┬─────────┐
@@ -136,27 +137,27 @@ Tokenizer Comparison: STEMI
 ### NURSE Stage Benchmark
 
 ```typescript
-import { benchmarkNurse } from "@comptext/core"
+import { benchmarkNurse } from "@comptext/core";
 
-const nurseResult = await benchmarkNurse(fhirBundle)
+const nurseResult = await benchmarkNurse(fhirBundle);
 // Zeigt PHI-Entfernungs-Statistiken
 ```
 
 ### KVTC Stage Benchmark
 
 ```typescript
-import { benchmarkKVTC } from "@comptext/core"
+import { benchmarkKVTC } from "@comptext/core";
 
-const kvtcResult = await benchmarkKVTC(scrubbedBundle)
+const kvtcResult = await benchmarkKVTC(scrubbedBundle);
 // Zeigt Kompressions-Details pro Layer
 ```
 
 ### Triage Stage Benchmark
 
 ```typescript
-import { benchmarkTriage } from "@comptext/core"
+import { benchmarkTriage } from "@comptext/core";
 
-const triageResult = await benchmarkTriage(compactBundle)
+const triageResult = await benchmarkTriage(compactBundle);
 // Zeigt Triage-Engine Performance
 ```
 
@@ -185,46 +186,46 @@ npm run benchmark -- --format=csv --output=benchmark-results.csv
 ### Minimaler Benchmark
 
 ```typescript
-import { benchmark } from "@comptext/core"
-import { FHIR_SEPSIS } from "@comptext/core"
+import { benchmark } from "@comptext/core";
+import { FHIR_SEPSIS } from "@comptext/core";
 
-const result = await benchmark(FHIR_SEPSIS)
+const result = await benchmark(FHIR_SEPSIS);
 
 console.log(`
   Input:     ${result.tokens.input} tokens
   Output:    ${result.tokens.final} tokens
   Saved:     ${result.tokens.saved} tokens
   Reduction: ${result.reduction_pct.toFixed(1)}%
-`)
+`);
 ```
 
 ### Detaillierter Benchmark
 
 ```typescript
-import { benchmarkDetailed } from "@comptext/core"
+import { benchmarkDetailed } from "@comptext/core";
 
-const detailed = await benchmarkDetailed(FHIR_STEMI)
+const detailed = await benchmarkDetailed(FHIR_STEMI);
 
-console.log("Stage Breakdown:")
-detailed.stages.forEach(stage => {
-  console.log(`  ${stage.name}: ${stage.tokens} tokens (${stage.time_ms}ms)`)
-})
+console.log("Stage Breakdown:");
+detailed.stages.forEach((stage) => {
+  console.log(`  ${stage.name}: ${stage.tokens} tokens (${stage.time_ms}ms)`);
+});
 
-console.log("\nSafety Fields Preserved:", detailed.safety.preserved_count)
-console.log("PHI Fields Removed:", detailed.privacy.phi_removed)
+console.log("\nSafety Fields Preserved:", detailed.safety.preserved_count);
+console.log("PHI Fields Removed:", detailed.privacy.phi_removed);
 ```
 
 ### Vergleichende Analyse
 
 ```typescript
-import { benchmarkAll, compareResults } from "@comptext/core"
+import { benchmarkAll, compareResults } from "@comptext/core";
 
-const results = await benchmarkAll()
-const comparison = compareResults(results)
+const results = await benchmarkAll();
+const comparison = compareResults(results);
 
-console.log("Best Compression:", comparison.best_compression.scenario)
-console.log("Fastest:", comparison.fastest.scenario)
-console.log("Average Reduction:", comparison.average.reduction_pct)
+console.log("Best Compression:", comparison.best_compression.scenario);
+console.log("Fastest:", comparison.fastest.scenario);
+console.log("Average Reduction:", comparison.average.reduction_pct);
 ```
 
 ## Benchmark-Konfiguration
@@ -238,9 +239,9 @@ export default {
   tokenizers: ["cl100k_base", "o200k_base"],
   output: {
     formats: ["console", "json", "markdown"],
-    savePath: "./benchmarks"
-  }
-}
+    savePath: "./benchmarks",
+  },
+};
 ```
 
 ## CI/CD Integration
@@ -267,21 +268,21 @@ jobs:
 
 ```typescript
 // tests/benchmark-regression.test.ts
-import { benchmarkAll } from "@comptext/core"
+import { benchmarkAll } from "@comptext/core";
 
 test("Token reduction above 93%", async () => {
-  const results = await benchmarkAll()
-  Object.values(results).forEach(result => {
-    expect(result.reduction_pct).toBeGreaterThan(93)
-  })
-})
+  const results = await benchmarkAll();
+  Object.values(results).forEach((result) => {
+    expect(result.reduction_pct).toBeGreaterThan(93);
+  });
+});
 
 test("Pipeline execution under 5ms", async () => {
-  const results = await benchmarkAll()
-  Object.values(results).forEach(result => {
-    expect(result.time.total_ms).toBeLessThan(5)
-  })
-})
+  const results = await benchmarkAll();
+  Object.values(results).forEach((result) => {
+    expect(result.time.total_ms).toBeLessThan(5);
+  });
+});
 ```
 
 ## Historische Vergleiche
@@ -299,11 +300,13 @@ npm run benchmark -- --trend=10
 ## Weitere Ressourcen
 
 ### Referenz-Dateien
+
 - **`scripts/benchmark.ts`** - Hauptbenchmark-Skript
 - **`packages/core/src/benchmark.ts`** - Benchmark-Utilities
 - **`docs/ARCHITECTURE.md`** - Performance-Architektur
 
 ### Benchmark-Daten
+
 - **`benchmarks/`** - Historische Benchmark-Ergebnisse
 - **`benchmarks/latest.json`** - Aktuellste Ergebnisse
 - **`benchmarks/trends.csv`** - Trend-Daten über Zeit
