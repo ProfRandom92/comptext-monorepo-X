@@ -11,6 +11,9 @@
     "test": "npm run test --workspaces --if-present",
     "test:coverage": "npm run test:coverage --workspaces --if-present",
     "dev": "npm run dev -w packages/visualizer",
+    "dev:host": "npm run dev -w packages/visualizer -- --host 0.0.0.0",
+    "setup:termux": "bash scripts/setup_termux.sh",
+    "termux:smoke": "node scripts/termux-smoke.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint packages/*/src/**/*.{ts,tsx} --ext .ts,.tsx",
     "lint:fix": "eslint packages/*/src/**/*.{ts,tsx} --ext .ts,.tsx --fix",
@@ -18,7 +21,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,yml,yaml}\"",
     "ci": "npm run lint && npm run typecheck && npm run build && npm run test",
     "benchmark": "tsx scripts/benchmark.ts",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "tsx": "^4.0.0",

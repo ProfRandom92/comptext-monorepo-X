@@ -5,6 +5,9 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    // 0.0.0.0 so the dev server is reachable from a phone browser (Termux) or LAN.
+    host: true,
+    port: Number(process.env.PORT) || 3000,
+    strictPort: false,
   },
 });

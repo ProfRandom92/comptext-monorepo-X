@@ -301,6 +301,23 @@ npm run dev -w packages/visualizer
 
 ---
 
+## Run on Android (Termux)
+
+CompText runs fully offline on Android. One command boots the whole pipeline and exposes the visualizer on the LAN:
+
+```bash
+pkg install -y git
+git clone https://github.com/ProfRandom92/comptext-monorepo-X
+cd comptext-monorepo-X
+npm run setup:termux
+```
+
+The setup script installs `nodejs-lts`/`git`/`jq`, builds `@comptext/core`, runs a deterministic smoke test on all 5 clinical scenarios (~20 ms), and prints the LAN URL for the Vite visualizer. After that, `npm run dev:host` serves the UI on `http://<phone-lan-ip>:3000` from any device on the same Wi-Fi.
+
+Full guide and troubleshooting: [`docs/TERMUX.md`](docs/TERMUX.md).
+
+---
+
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and the [Code of Conduct](CODE_OF_CONDUCT.md). Security issues: see [SECURITY.md](SECURITY.md).
