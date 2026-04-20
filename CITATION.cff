@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use CompText in research, please cite it as below."
+title: "CompText: Domain-Specific Language for Clinical AI Token Preprocessing"
+authors:
+  - family-names: Kölnberger
+    given-names: Alex
+version: 5.0.0
+date-released: 2026-04-20
+license: MIT
+repository-code: "https://github.com/ProfRandom92/comptext-monorepo-X"
+keywords:
+  - fhir
+  - llm
+  - medgemma
+  - gdpr
+  - clinical-ai
+  - token-compression

@@ -42,6 +42,25 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "author": "Alex Köllnberger",
-  "license": "MIT"
+  "author": "Alex Kölnberger",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProfRandom92/comptext-monorepo-X.git"
+  },
+  "homepage": "https://github.com/ProfRandom92/comptext-monorepo-X#readme",
+  "bugs": {
+    "url": "https://github.com/ProfRandom92/comptext-monorepo-X/issues"
+  },
+  "keywords": [
+    "clinical-ai",
+    "dsl",
+    "edge-ai",
+    "fhir",
+    "gdpr",
+    "healthcare",
+    "llm",
+    "medgemma",
+    "token-compression"
+  ]
 }

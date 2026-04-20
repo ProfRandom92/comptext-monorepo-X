@@ -47,9 +47,9 @@ Die CompText Domain-Specific Language (DSL) ist ein kompaktes, maschinenlesbares
 
 ### Token-Vergleich
 
-| Format | Tokens | Bytes | Reduktion |
-|--------|--------|-------|-----------|
-| FHIR R4 JSON | 1,847 | 4,820 | Baseline |
+| Format       | Tokens  | Bytes   | Reduktion |
+| ------------ | ------- | ------- | --------- |
+| FHIR R4 JSON | 1,847   | 4,820   | Baseline  |
 | CompText DSL | **112** | **438** | **93.9%** |
 
 ---
@@ -145,80 +145,80 @@ HEXDIG          = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
 
 ### Header-Felder
 
-| Feld | Beispiel | Beschreibung |
-|------|----------|--------------|
-| `v` | `v5` | Schema-Version (Major-Version) |
-| `sc` | `SC:STEMI` | Szenario-Code |
-| `tri` | `TRI:P1` | Triage-Klasse |
+| Feld  | Beispiel   | Beschreibung                   |
+| ----- | ---------- | ------------------------------ |
+| `v`   | `v5`       | Schema-Version (Major-Version) |
+| `sc`  | `SC:STEMI` | Szenario-Code                  |
+| `tri` | `TRI:P1`   | Triage-Klasse                  |
 
 ### Vitalzeichen-Felder (VS[...])
 
-| Feld | Beispiel | Einheit | Bereich |
-|------|----------|---------|---------|
-| `hr` | `hr:118` | /min | 30-200 |
-| `sbp` | `sbp:82` | mmHg | 50-250 |
-| `dbp` | `dbp:60` | mmHg | 30-150 |
-| `spo2` | `spo2:91` | % | 50-100 |
-| `rr` | `rr:22` | /min | 4-60 |
-| `temp` | `temp:37.8` | °C | 30-45 |
-| `gcs` | `gcs:14` | pts | 3-15 |
-| `map` | `map:75` | mmHg | 40-150 |
+| Feld   | Beispiel    | Einheit | Bereich |
+| ------ | ----------- | ------- | ------- |
+| `hr`   | `hr:118`    | /min    | 30-200  |
+| `sbp`  | `sbp:82`    | mmHg    | 50-250  |
+| `dbp`  | `dbp:60`    | mmHg    | 30-150  |
+| `spo2` | `spo2:91`   | %       | 50-100  |
+| `rr`   | `rr:22`     | /min    | 4-60    |
+| `temp` | `temp:37.8` | °C      | 30-45   |
+| `gcs`  | `gcs:14`    | pts     | 3-15    |
+| `map`  | `map:75`    | mmHg    | 40-150  |
 
 ### Labor-Felder (LAB[...])
 
-| Feld | Beispiel | Einheit | Referenz |
-|------|----------|---------|----------|
-| `hs_tni` | `hs_tni:4847` | ng/L | <16 |
-| `ckmb` | `ckmb:48.7` | µg/L | <5 |
-| `lactate` | `lactate:4.8` | mmol/L | 0.5-2.0 |
-| `pct` | `pct:38.4` | µg/L | <0.5 |
-| `crp` | `crp:287` | mg/L | <5 |
-| `glucose` | `glucose:1.8` | mmol/L | 4.0-6.1 |
-| `egfr` | `egfr:38` | ml/min/1.73m² | >60 |
-| `creatinine` | `creatinine:150` | µmol/L | 60-110 |
-| `inr` | `inr:1.2` | - | 0.8-1.2 |
-| `aptt` | `aptt:35` | s | 25-35 |
-| `hb` | `hb:8.5` | g/dL | 12-16 |
-| `wbc` | `wbc:12.5` | 10^9/L | 4-10 |
-| `plt` | `plt:180` | 10^9/L | 150-400 |
+| Feld         | Beispiel         | Einheit       | Referenz |
+| ------------ | ---------------- | ------------- | -------- |
+| `hs_tni`     | `hs_tni:4847`    | ng/L          | <16      |
+| `ckmb`       | `ckmb:48.7`      | µg/L          | <5       |
+| `lactate`    | `lactate:4.8`    | mmol/L        | 0.5-2.0  |
+| `pct`        | `pct:38.4`       | µg/L          | <0.5     |
+| `crp`        | `crp:287`        | mg/L          | <5       |
+| `glucose`    | `glucose:1.8`    | mmol/L        | 4.0-6.1  |
+| `egfr`       | `egfr:38`        | ml/min/1.73m² | >60      |
+| `creatinine` | `creatinine:150` | µmol/L        | 60-110   |
+| `inr`        | `inr:1.2`        | -             | 0.8-1.2  |
+| `aptt`       | `aptt:35`        | s             | 25-35    |
+| `hb`         | `hb:8.5`         | g/dL          | 12-16    |
+| `wbc`        | `wbc:12.5`       | 10^9/L        | 4-10     |
+| `plt`        | `plt:180`        | 10^9/L        | 150-400  |
 
 ### Allergie-Felder (ALG:...)
 
-| Feld | Beispiel | Beschreibung |
-|------|----------|--------------|
+| Feld  | Beispiel                | Beschreibung                   |
+| ----- | ----------------------- | ------------------------------ |
 | `ALG` | `ALG:Jodkontrastmittel` | Allergen-Name (max 20 Zeichen) |
-| `SEV` | `SEV:II` | WAO/AWMF-Schweregrad |
-| `KI` | `KI:[V08,V09]` | Kontraindizierte ATC-Codes |
+| `SEV` | `SEV:II`                | WAO/AWMF-Schweregrad           |
+| `KI`  | `KI:[V08,V09]`          | Kontraindizierte ATC-Codes     |
 
 ### Medikamenten-Felder (RX:...)
 
-| Feld | Beispiel | Beschreibung |
-|------|----------|--------------|
-| `RX` | `RX:Aspirin` | Medikamenten-Name (max 20 Zeichen) |
-| `ATC` | `ATC:1191` | ATC/RxNorm-Code |
-| `DOSE` | `DOSE:500mg` | Dosis (kompakt) |
-| `FREQ` | `FREQ:1x iv` | Frequenz (kompakt) |
-| `KI` | `KI:[LYSE-KI:NOAC<48h]` | Klinische Kontraindikationen |
+| Feld   | Beispiel                | Beschreibung                       |
+| ------ | ----------------------- | ---------------------------------- |
+| `RX`   | `RX:Aspirin`            | Medikamenten-Name (max 20 Zeichen) |
+| `ATC`  | `ATC:1191`              | ATC/RxNorm-Code                    |
+| `DOSE` | `DOSE:500mg`            | Dosis (kompakt)                    |
+| `FREQ` | `FREQ:1x iv`            | Frequenz (kompakt)                 |
+| `KI`   | `KI:[LYSE-KI:NOAC<48h]` | Klinische Kontraindikationen       |
 
 ### ICD-Felder
 
-| Feld | Beispiel | Beschreibung |
-|------|----------|--------------|
+| Feld  | Beispiel       | Beschreibung             |
+| ----- | -------------- | ------------------------ |
 | `ICD` | `ICD:[I21.09]` | ICD-10-GM Codes (max 10) |
 
 ### Kontext-Feld
 
-| Feld | Beispiel | Beschreibung |
-|------|----------|--------------|
+| Feld  | Beispiel                   | Beschreibung                         |
+| ----- | -------------------------- | ------------------------------------ |
 | `CTX` | `CTX:Ak. transm. MI VW KS` | Klinischer Kontext (max 200 Zeichen) |
 
 ### GDPR-Felder
 
-| Feld | Beispiel | Beschreibung |
-|------|----------|--------------|
-| `GDPR` | `GDPR:ART9` | DSGVO-Artikel 9 Marker |
-| `PHI` | `PHI:3f8a1c2d` | FNV-1a Hash (8 Hex-Zeichen) |
-| `TS` | `TS:1710509000` | Unix-Zeitstempel (Sekunden) |
+| Feld   | Beispiel        | Beschreibung                |
+| ------ | --------------- | --------------------------- |
+| `GDPR` | `GDPR:ART9`     | DSGVO-Artikel 9 Marker      |
+| `PHI`  | `PHI:3f8a1c2d`  | FNV-1a Hash (8 Hex-Zeichen) |
+| `TS`   | `TS:1710509000` | Unix-Zeitstempel (Sekunden) |
 
 ---
 
@@ -226,32 +226,35 @@ HEXDIG          = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
 
 ### Übersicht
 
-| Code | Vollname | ICD-10-Cluster | P1-Trigger |
-|------|----------|----------------|------------|
-| `STEMI` | ST-Elevation Myocardial Infarction | I21.x, I22.x | I21.x, sBP<90 |
-| `SEPSIS` | Sepsis / Septischer Schock | A40.x, A41.x | A41.x, Laktat>4 |
-| `STROKE` | Ischämischer Schlaganfall | I63.x, I64 | I63.x, NIHSS>4 |
-| `ANAPH` | Anaphylaxie | T78.2, T80.5 | T78.2, sBP<90 |
-| `DM-HYPO` | Diabetische Hypoglykämie | E10.64, E11.64 | E11.64, BZ<2.5 |
-| `TRAUMA` | Polytrauma | S00-T14 | ISS>16 |
-| `HF-DECOMP` | Dekompensierte Herzinsuffizienz | I50.x | I50.x, SpO2<90 |
-| `ACS` | Akutes Koronarsyndrom | I20.0, I21.4 | I20.0, hsTnI>52 |
+| Code        | Vollname                           | ICD-10-Cluster | P1-Trigger      |
+| ----------- | ---------------------------------- | -------------- | --------------- |
+| `STEMI`     | ST-Elevation Myocardial Infarction | I21.x, I22.x   | I21.x, sBP<90   |
+| `SEPSIS`    | Sepsis / Septischer Schock         | A40.x, A41.x   | A41.x, Laktat>4 |
+| `STROKE`    | Ischämischer Schlaganfall          | I63.x, I64     | I63.x, NIHSS>4  |
+| `ANAPH`     | Anaphylaxie                        | T78.2, T80.5   | T78.2, sBP<90   |
+| `DM-HYPO`   | Diabetische Hypoglykämie           | E10.64, E11.64 | E11.64, BZ<2.5  |
+| `TRAUMA`    | Polytrauma                         | S00-T14        | ISS>16          |
+| `HF-DECOMP` | Dekompensierte Herzinsuffizienz    | I50.x          | I50.x, SpO2<90  |
+| `ACS`       | Akutes Koronarsyndrom              | I20.0, I21.4   | I20.0, hsTnI>52 |
 
 ### Szenario-Details
 
 #### STEMI (SC:STEMI)
 
 **Kritische Werte:**
+
 - hsTnI > 52 ng/L (ESC 2023)
 - sBP < 90 mmHg (kardiogener Schock)
 - CK-MB > 10 µg/L
 
 **Typische Labor:**
+
 ```
 LAB[hs_tni:4847ng/L↑↑ ckmb:48.7µg/L↑↑]
 ```
 
 **Typische Vitalzeichen:**
+
 ```
 VS[hr:118 sbp:82↓↓ spo2:91↓]
 ```
@@ -261,11 +264,13 @@ VS[hr:118 sbp:82↓↓ spo2:91↓]
 #### SEPSIS (SC:SEPSIS)
 
 **Kritische Werte:**
+
 - Laktat > 4.0 mmol/L (SSC 2021)
 - PCT > 10 µg/L (septischer Schock)
 - sBP < 90 mmHg
 
 **Typische Labor:**
+
 ```
 LAB[lactate:4.8mmol/L↑↑ pct:38.4µg/L↑↑ crp:287mg/L↑]
 ```
@@ -275,16 +280,19 @@ LAB[lactate:4.8mmol/L↑↑ pct:38.4µg/L↑↑ crp:287mg/L↑]
 #### STROKE (SC:STROKE)
 
 **Kritische Werte:**
+
 - NIHSS > 4 (AHA/ASA 2019)
 - BZ < 2.5 oder > 20 mmol/L
 - Onset-to-door < 4.5h (Lyse-Fenster)
 
 **Typische Labor:**
+
 ```
 LAB[glucose:6.4mmol/L]
 ```
 
 **NOAC-Kontraindikation:**
+
 ```
 RX:Rivaroxaban ATC:B01AF01 DOSE:20mg FREQ:1x/d KI:[LYSE-KI:NOAC<48h]
 ```
@@ -294,11 +302,13 @@ RX:Rivaroxaban ATC:B01AF01 DOSE:20mg FREQ:1x/d KI:[LYSE-KI:NOAC<48h]
 #### ANAPH (SC:ANAPH)
 
 **Kritische Werte:**
+
 - sBP < 90 mmHg (WAO Grad III)
 - SpO2 < 90%
 - Stridor/Bronchospasmus
 
 **Typische Vitalzeichen:**
+
 ```
 VS[sbp:64↓↓ spo2:87↓↓]
 ```
@@ -308,16 +318,19 @@ VS[sbp:64↓↓ spo2:87↓↓]
 #### DM-HYPO (SC:DM-HYPO)
 
 **Kritische Werte:**
+
 - BZ < 2.5 mmol/L (ADA Level 3)
 - GCS < 9
 - eGFR < 30 (Glibenclamid-Akkumulation)
 
 **Typische Labor:**
+
 ```
 LAB[glucose:1.8mmol/L↓↓ egfr:38ml/min/1.73m²↓]
 ```
 
 **Sulfonylharnstoff-Risiko:**
+
 ```
 RX:Glibenclamid ATC:A10BB01 DOSE:3.5mg FREQ:2x/d KI:[HYPO-RISK:SHT-Rebound-24h]
 ```
@@ -328,37 +341,37 @@ RX:Glibenclamid ATC:A10BB01 DOSE:3.5mg FREQ:2x/d KI:[HYPO-RISK:SHT-Rebound-24h]
 
 ### LOINC-Mapping
 
-| Key | LOINC | Display | Einheit |
-|-----|-------|---------|---------|
-| `hr` | 8867-4 | Heart rate | /min |
-| `sbp` | 8480-6 | Systolic BP | mmHg |
-| `dbp` | 8462-4 | Diastolic BP | mmHg |
-| `spo2` | 59408-5 | O2 saturation | % |
-| `rr` | 9279-1 | Respiratory rate | /min |
-| `temp` | 8310-5 | Body temperature | °C |
-| `gcs` | — | Glasgow Coma Scale | pts |
-| `map` | 55284-4* | Mean arterial pressure | mmHg |
+| Key    | LOINC     | Display                | Einheit |
+| ------ | --------- | ---------------------- | ------- |
+| `hr`   | 8867-4    | Heart rate             | /min    |
+| `sbp`  | 8480-6    | Systolic BP            | mmHg    |
+| `dbp`  | 8462-4    | Diastolic BP           | mmHg    |
+| `spo2` | 59408-5   | O2 saturation          | %       |
+| `rr`   | 9279-1    | Respiratory rate       | /min    |
+| `temp` | 8310-5    | Body temperature       | °C      |
+| `gcs`  | —         | Glasgow Coma Scale     | pts     |
+| `map`  | 55284-4\* | Mean arterial pressure | mmHg    |
 
-*calculated from systolic/diastolic
+\*calculated from systolic/diastolic
 
 ### P1-Grenzwerte
 
-| Vital | P1 wenn | Quelle |
-|-------|---------|--------|
-| sBP | < 90 mmHg | ESC 2023 |
-| SpO2 | < 90% | ERC Guidelines |
-| HR | > 150 /min | AHA ACLS |
-| GCS | < 9 | TBI Guidelines |
-| MAP | < 65 mmHg | Surviving Sepsis |
+| Vital | P1 wenn    | Quelle           |
+| ----- | ---------- | ---------------- |
+| sBP   | < 90 mmHg  | ESC 2023         |
+| SpO2  | < 90%      | ERC Guidelines   |
+| HR    | > 150 /min | AHA ACLS         |
+| GCS   | < 9        | TBI Guidelines   |
+| MAP   | < 65 mmHg  | Surviving Sepsis |
 
 ### P2-Grenzwerte
 
-| Vital | P2 wenn |
-|-------|---------|
-| sBP | 90-100 oder >180 mmHg |
-| SpO2 | 90-94% |
-| HR | 120-150 oder <50 /min |
-| GCS | 9-12 |
+| Vital | P2 wenn               |
+| ----- | --------------------- |
+| sBP   | 90-100 oder >180 mmHg |
+| SpO2  | 90-94%                |
+| HR    | 120-150 oder <50 /min |
+| GCS   | 9-12                  |
 
 ### Beispiele
 
@@ -382,33 +395,33 @@ VS[hr:95 spo2:97 sbp:110 gcs:10]
 
 ### LOINC-Mapping
 
-| Key | LOINC | Display | Einheit |
-|-----|-------|---------|---------|
-| `hs_tni` | 89579-7 | Troponin I | ng/L |
-| `ckmb` | 13969-1 | CK-MB | µg/L |
-| `lactate` | 2519-7 | Lactate | mmol/L |
-| `pct` | 33959-8 | Procalcitonin | µg/L |
-| `crp` | 1988-5 | CRP | mg/L |
-| `glucose` | 15074-8 | Glucose | mmol/L |
-| `egfr` | 62238-1 | eGFR (CKD-EPI) | ml/min/1.73m² |
-| `creatinine` | 2160-0 | Creatinine | µmol/L |
-| `inr` | 34714-6 | INR | - |
-| `aptt` | 3173-2 | aPTT | s |
-| `hb` | 718-7 | Hemoglobin | g/dL |
-| `wbc` | 6690-2 | WBC | 10^9/L |
-| `plt` | 777-3 | Platelets | 10^9/L |
+| Key          | LOINC   | Display        | Einheit       |
+| ------------ | ------- | -------------- | ------------- |
+| `hs_tni`     | 89579-7 | Troponin I     | ng/L          |
+| `ckmb`       | 13969-1 | CK-MB          | µg/L          |
+| `lactate`    | 2519-7  | Lactate        | mmol/L        |
+| `pct`        | 33959-8 | Procalcitonin  | µg/L          |
+| `crp`        | 1988-5  | CRP            | mg/L          |
+| `glucose`    | 15074-8 | Glucose        | mmol/L        |
+| `egfr`       | 62238-1 | eGFR (CKD-EPI) | ml/min/1.73m² |
+| `creatinine` | 2160-0  | Creatinine     | µmol/L        |
+| `inr`        | 34714-6 | INR            | -             |
+| `aptt`       | 3173-2  | aPTT           | s             |
+| `hb`         | 718-7   | Hemoglobin     | g/dL          |
+| `wbc`        | 6690-2  | WBC            | 10^9/L        |
+| `plt`        | 777-3   | Platelets      | 10^9/L        |
 
 ### P1-Grenzwerte
 
-| Labor | P1 wenn | Quelle |
-|-------|---------|--------|
-| hsTnI | > 52 ng/L | ESC 2023 |
-| Laktat | > 4.0 mmol/L | SSC 2021 |
-| PCT | > 10 µg/L | SSC 2021 |
-| Glukose | < 2.5 mmol/L | ADA 2024 |
-| eGFR | < 15 ml/min/1.73m² | KDIGO |
-| Hb | < 7.0 g/dL | DGKL 2023 |
-| INR | > 3.0 | - |
+| Labor   | P1 wenn            | Quelle    |
+| ------- | ------------------ | --------- |
+| hsTnI   | > 52 ng/L          | ESC 2023  |
+| Laktat  | > 4.0 mmol/L       | SSC 2021  |
+| PCT     | > 10 µg/L          | SSC 2021  |
+| Glukose | < 2.5 mmol/L       | ADA 2024  |
+| eGFR    | < 15 ml/min/1.73m² | KDIGO     |
+| Hb      | < 7.0 g/dL         | DGKL 2023 |
+| INR     | > 3.0              | -         |
 
 ### Beispiele
 
@@ -432,23 +445,23 @@ LAB[hs_tni:12ng/L ckmb:3.2µg/L crp:2mg/L]
 
 ### Interpretation-Codes
 
-| Flag | Unicode | Bedeutung | Interpretation |
-|------|---------|-----------|----------------|
-| `↑↑` | U+2191 U+2191 | Kritisch erhöht | HH (Critical High) |
-| `↑` | U+2191 | Erhöht | H (High) |
-| `n` | n | Normal | N (Normal) |
-| `↓` | U+2193 | Erniedrigt | L (Low) |
-| `↓↓` | U+2193 U+2193 | Kritisch erniedrigt | LL (Critical Low) |
+| Flag | Unicode       | Bedeutung           | Interpretation     |
+| ---- | ------------- | ------------------- | ------------------ |
+| `↑↑` | U+2191 U+2191 | Kritisch erhöht     | HH (Critical High) |
+| `↑`  | U+2191        | Erhöht              | H (High)           |
+| `n`  | n             | Normal              | N (Normal)         |
+| `↓`  | U+2193        | Erniedrigt          | L (Low)            |
+| `↓↓` | U+2193 U+2193 | Kritisch erniedrigt | LL (Critical Low)  |
 
 ### FHIR-zu-CompText Mapping
 
-| FHIR Code | CompText | Bedeutung |
-|-----------|----------|-----------|
-| `HH` | `↑↑` | Critical High |
-| `H` | `↑` | High |
-| `N` | `n` | Normal |
-| `L` | `↓` | Low |
-| `LL` | `↓↓` | Critical Low |
+| FHIR Code | CompText | Bedeutung     |
+| --------- | -------- | ------------- |
+| `HH`      | `↑↑`     | Critical High |
+| `H`       | `↑`      | High          |
+| `N`       | `n`      | Normal        |
+| `L`       | `↓`      | Low           |
+| `LL`      | `↓↓`     | Critical Low  |
 
 ### Beispiele
 
@@ -472,23 +485,23 @@ glucose:5.4mmol/Ln
 
 ### WAO/AWMF-Graduierung
 
-| Grad | Code | Symptome | Klinische Relevanz |
-|------|------|----------|-------------------|
-| I | `SEV:I` | Haut (Urtikaria, Pruritus) | Beobachten |
-| II | `SEV:II` | Moderate systemische Reaktion | Antihistaminikum |
-| III | `SEV:III` | Lebensbedrohlich (Bronchospasmus, Schock) | Adrenalin, ICU |
-| IV | `SEV:IV` | Herz-Kreislauf-Stillstand | CPR |
+| Grad | Code      | Symptome                                  | Klinische Relevanz |
+| ---- | --------- | ----------------------------------------- | ------------------ |
+| I    | `SEV:I`   | Haut (Urtikaria, Pruritus)                | Beobachten         |
+| II   | `SEV:II`  | Moderate systemische Reaktion             | Antihistaminikum   |
+| III  | `SEV:III` | Lebensbedrohlich (Bronchospasmus, Schock) | Adrenalin, ICU     |
+| IV   | `SEV:IV`  | Herz-Kreislauf-Stillstand                 | CPR                |
 
 ### SNOMED-zu-CompText Mapping
 
-| SNOMED CT | Allergen | Default SEV | KI (ATC) |
-|-----------|----------|-------------|----------|
-| 418425009 | Jodkontrastmittel | II | V08, V09 |
-| 416098002 | Penicillin | III | J01CA, J01CE, J01CF |
-| 241929008 | Hymenoptera | III | — |
-| 372687004 | Amoxicillin | II | J01CA04 |
-| 372903009 | Cephalosporine | II | J01DB, J01DC |
-| 387173000 | NSAR | II | M01A |
+| SNOMED CT | Allergen          | Default SEV | KI (ATC)            |
+| --------- | ----------------- | ----------- | ------------------- |
+| 418425009 | Jodkontrastmittel | II          | V08, V09            |
+| 416098002 | Penicillin        | III         | J01CA, J01CE, J01CF |
+| 241929008 | Hymenoptera       | III         | —                   |
+| 372687004 | Amoxicillin       | II          | J01CA04             |
+| 372903009 | Cephalosporine    | II          | J01DB, J01DC        |
+| 387173000 | NSAR              | II          | M01A                |
 
 ### Beispiele
 
@@ -564,25 +577,25 @@ ALG:Jodkontrastmittel\tSEV:II
 
 Folgende Zeichen müssen in Textfeldern escaped werden:
 
-| Zeichen | Escape | Kontext |
-|---------|--------|---------|
-| `\n` | `\\n` | CTX-Feld |
-| `;` | `\\;` | CTX-Feld |
-| `[` | `\\[` | Alle Felder |
-| `]` | `\\]` | Alle Felder |
-| `:` | `\\:` | Alle Felder |
+| Zeichen | Escape | Kontext     |
+| ------- | ------ | ----------- |
+| `\n`    | `\\n`  | CTX-Feld    |
+| `;`     | `\\;`  | CTX-Feld    |
+| `[`     | `\\[`  | Alle Felder |
+| `]`     | `\\]`  | Alle Felder |
+| `:`     | `\\:`  | Alle Felder |
 
 ### Längenbeschränkungen
 
-| Feld | Max. Länge | Beschreibung |
-|------|------------|--------------|
-| Allergen (ALG) | 20 Zeichen | INN oder Allergen-Name |
-| Medikament (RX) | 20 Zeichen | INN |
-| Dosis (DOSE) | 20 Zeichen | Kompakt-Notation |
-| Frequenz (FREQ) | 20 Zeichen | Kompakt-Notation |
-| Narrative (CTX) | 200 Zeichen | Klinischer Kontext |
-| ICD-Codes | 10 Codes | Max. 10 pro Frame |
-| PHI-Hash | 8 Hex-Zeichen | FNV-1a Output |
+| Feld            | Max. Länge    | Beschreibung           |
+| --------------- | ------------- | ---------------------- |
+| Allergen (ALG)  | 20 Zeichen    | INN oder Allergen-Name |
+| Medikament (RX) | 20 Zeichen    | INN                    |
+| Dosis (DOSE)    | 20 Zeichen    | Kompakt-Notation       |
+| Frequenz (FREQ) | 20 Zeichen    | Kompakt-Notation       |
+| Narrative (CTX) | 200 Zeichen   | Klinischer Kontext     |
+| ICD-Codes       | 10 Codes      | Max. 10 pro Frame      |
+| PHI-Hash        | 8 Hex-Zeichen | FNV-1a Output          |
 
 ### Validierungsregeln
 
@@ -618,6 +631,7 @@ Folgende Zeichen müssen in Textfeldern escaped werden:
 **Input:** FHIR R4 Bundle mit STEMI, kardiogenem Schock, Kontrastmittel-Allergie
 
 **Output:**
+
 ```
 CT:v5 SC:STEMI TRI:P1
 VS[hr:118 sbp:82↓↓ spo2:91↓]
@@ -638,6 +652,7 @@ GDPR:ART9 PHI:3f8a1c2d TS:1710509000
 **Input:** FHIR R4 Bundle mit septischem Schock, Penicillin-Allergie
 
 **Output:**
+
 ```
 CT:v5 SC:SEPSIS TRI:P1
 VS[hr:135↑ sbp:76↓↓ rr:28↑ spo2:93↓]
@@ -658,6 +673,7 @@ GDPR:ART9 PHI:7b3c9d2a TS:1710509100
 **Input:** FHIR R4 Bundle mit ischämischem Schlaganfall, Rivaroxaban
 
 **Output:**
+
 ```
 CT:v5 SC:STROKE TRI:P1
 VS[hr:95 sbp:145 spo2:97]
@@ -677,6 +693,7 @@ GDPR:ART9 PHI:9e4f1b8c TS:1710509200
 **Input:** FHIR R4 Bundle mit Anaphylaxie Grad III, Insekten-Allergie
 
 **Output:**
+
 ```
 CT:v5 SC:ANAPH TRI:P1
 VS[hr:142↑ sbp:64↓↓ spo2:87↓↓]
@@ -695,6 +712,7 @@ GDPR:ART9 PHI:2a5d8e1f TS:1710509300
 **Input:** FHIR R4 Bundle mit schwerer Hypoglykämie, Glibenclamid
 
 **Output:**
+
 ```
 CT:v5 SC:DM-HYPO TRI:P2
 VS[hr:95 spo2:97 sbp:110]
@@ -743,59 +761,59 @@ GDPR:ART9 PHI:a1b2c3d4 TS:1710509500
 
 ```typescript
 interface ParseResult {
-  success: boolean
-  frame?: CompTextFrame
-  errors?: ValidationError[]
+  success: boolean;
+  frame?: CompTextFrame;
+  errors?: ValidationError[];
 }
 
 function parseCompText(dsl: string): ParseResult {
-  const errors: ValidationError[] = []
-  const lines = dsl.split(/\r?\n/)
+  const errors: ValidationError[] = [];
+  const lines = dsl.split(/\r?\n/);
 
   // Version prüfen
-  const headerMatch = lines[0]?.match(/^CT:v(\d+) SC:(\S+) TRI:(\S+)$/)
+  const headerMatch = lines[0]?.match(/^CT:v(\d+) SC:(\S+) TRI:(\S+)$/);
   if (!headerMatch) {
-    errors.push({ line: 1, message: "Invalid header format" })
-    return { success: false, errors }
+    errors.push({ line: 1, message: "Invalid header format" });
+    return { success: false, errors };
   }
 
-  const [, version, scenario, triage] = headerMatch
+  const [, version, scenario, triage] = headerMatch;
 
   if (version !== "5") {
-    errors.push({ line: 1, message: `Unsupported version: ${version}` })
+    errors.push({ line: 1, message: `Unsupported version: ${version}` });
   }
 
   // Szenario validieren
-  const validScenarios = ["STEMI", "SEPSIS", "STROKE", "ANAPH", "DM-HYPO"]
+  const validScenarios = ["STEMI", "SEPSIS", "STROKE", "ANAPH", "DM-HYPO"];
   if (!validScenarios.includes(scenario)) {
-    errors.push({ line: 1, message: `Invalid scenario: ${scenario}` })
+    errors.push({ line: 1, message: `Invalid scenario: ${scenario}` });
   }
 
   // Triage validieren
   if (!/^(P1|P2|P3|P4)$/.test(triage)) {
-    errors.push({ line: 1, message: `Invalid triage: ${triage}` })
+    errors.push({ line: 1, message: `Invalid triage: ${triage}` });
   }
 
   // ... weitere Validierung
 
   return errors.length === 0
     ? { success: true, frame: buildFrame(lines) }
-    : { success: false, errors }
+    : { success: false, errors };
 }
 ```
 
 ### Validierungs-Checkliste
 
-| Check | Beschreibung |
-|-------|--------------|
-| Version | Muss "5" sein |
-| Szenario | Muss in erlaubter Liste sein |
-| Triage | Muss P1/P2/P3/P4 sein |
-| PHI-Hash | Muss 8 Hex-Zeichen sein |
-| Zeistempel | Muss 10 Ziffern sein |
-| ICD-Codes | Müssen gültiges Format haben |
-| ATC-Codes | Müssen gültiges Format haben |
-| Allergie-SEV | Muss I/II/III/IV sein |
+| Check        | Beschreibung                 |
+| ------------ | ---------------------------- |
+| Version      | Muss "5" sein                |
+| Szenario     | Muss in erlaubter Liste sein |
+| Triage       | Muss P1/P2/P3/P4 sein        |
+| PHI-Hash     | Muss 8 Hex-Zeichen sein      |
+| Zeistempel   | Muss 10 Ziffern sein         |
+| ICD-Codes    | Müssen gültiges Format haben |
+| ATC-Codes    | Müssen gültiges Format haben |
+| Allergie-SEV | Muss I/II/III/IV sein        |
 
 ---
 
@@ -804,6 +822,7 @@ function parseCompText(dsl: string): ParseResult {
 ### v5.0.0 (2024-03-15)
 
 **Neu:**
+
 - Initiale Version
 - Unterstützung für 5 klinische Szenarien
 - 4-Layer KVTC-Kompression
@@ -812,11 +831,13 @@ function parseCompText(dsl: string): ParseResult {
 ### Geplante Änderungen
 
 **v5.1.0 (geplant):**
+
 - Neue Szenarien: TRAUMA, HF-DECOMP, ACS
 - Erweiterte LOINC-Mappings
 - Batch-Validierung
 
 **v6.0.0 (geplant):**
+
 - JSON-Format als Alternative zu DSL
 - Streaming-Parser
 - Erweiterte Medikamenten-Interaktionen
@@ -827,70 +848,71 @@ function parseCompText(dsl: string): ParseResult {
 
 ### A. Komplette LOINC-zu-Key Tabelle
 
-| Key | LOINC | Display | Einheit | P1-Threshold |
-|-----|-------|---------|---------|--------------|
-| hsTnI | 89579-7 | Troponin I | ng/L | >52 |
-| CKMB | 13969-1 | CK-MB | µg/L | >10 |
-| LAC | 2519-7 | Lactate | mmol/L | >4.0 |
-| PCT | 33959-8 | Procalcitonin | µg/L | >10 |
-| CRP | 1988-5 | CRP | mg/L | - |
-| BZ | 15074-8 | Glucose | mmol/L | <2.5 |
-| eGFR | 62238-1 | eGFR | ml/min/1.73m² | <15 |
-| BP | 55284-4 | Blood Pressure | mmHg | Panel |
-| sBP | 8480-6 | Systolic BP | mmHg | <90 |
-| dBP | 8462-4 | Diastolic BP | mmHg | <60 |
-| HR | 8867-4 | Heart Rate | /min | >150 |
-| SpO2 | 59408-5 | O2 Saturation | % | <90 |
-| AF | 9279-1 | Respiratory Rate | /min | >30 |
-| Temp | 8310-5 | Temperature | °C | <35 oder >40 |
-| NIHSS | 72107-6 | NIH Stroke Scale | pts | >4 |
+| Key   | LOINC   | Display          | Einheit       | P1-Threshold |
+| ----- | ------- | ---------------- | ------------- | ------------ |
+| hsTnI | 89579-7 | Troponin I       | ng/L          | >52          |
+| CKMB  | 13969-1 | CK-MB            | µg/L          | >10          |
+| LAC   | 2519-7  | Lactate          | mmol/L        | >4.0         |
+| PCT   | 33959-8 | Procalcitonin    | µg/L          | >10          |
+| CRP   | 1988-5  | CRP              | mg/L          | -            |
+| BZ    | 15074-8 | Glucose          | mmol/L        | <2.5         |
+| eGFR  | 62238-1 | eGFR             | ml/min/1.73m² | <15          |
+| BP    | 55284-4 | Blood Pressure   | mmHg          | Panel        |
+| sBP   | 8480-6  | Systolic BP      | mmHg          | <90          |
+| dBP   | 8462-4  | Diastolic BP     | mmHg          | <60          |
+| HR    | 8867-4  | Heart Rate       | /min          | >150         |
+| SpO2  | 59408-5 | O2 Saturation    | %             | <90          |
+| AF    | 9279-1  | Respiratory Rate | /min          | >30          |
+| Temp  | 8310-5  | Temperature      | °C            | <35 oder >40 |
+| NIHSS | 72107-6 | NIH Stroke Scale | pts           | >4           |
 
 ### B. Einheits-Normalisierung
 
-| Eingabe | Ausgabe | Konversion |
-|---------|---------|------------|
-| mm[Hg] | mmHg | 1:1 |
-| ug/L | µg/L | 1:1 |
-| mL/min/{1.73_m2} | ml/min/1.73m² | 1:1 |
-| {score} | pts | 1:1 |
+| Eingabe          | Ausgabe       | Konversion |
+| ---------------- | ------------- | ---------- |
+| mm[Hg]           | mmHg          | 1:1        |
+| ug/L             | µg/L          | 1:1        |
+| mL/min/{1.73_m2} | ml/min/1.73m² | 1:1        |
+| {score}          | pts           | 1:1        |
 
 ### C. Klinische Abkürzungen
 
-| Original | Abkürzung |
-|----------|-----------|
-| Akuter | Ak. |
-| transmuraler | transm. |
-| Myokardinfarkt | MI |
-| Vorderwand | VW |
-| kardiogener Schock | KS |
-| nicht näher bezeichnet | n.n.b. |
-| Pneumonie | PNA |
-| septischer Schock | SepS |
-| ambulant erworben | CAP |
-| Hirninfarkt | Stroke |
-| zerebraler Arterien | zer.Art. |
-| Thrombose | Thrombose |
-| Anaphylaktischer Schock | AnaphS |
-| Diabetes mellitus | DM |
-| Typ 2 | T2 |
-| Hypoglykämie | Hypo |
-| mit Koma | +Koma |
-| bekannt | bekannt |
-| Eingeschränkte Nierenfunktion | NI |
-| Kontrastmittel-Allergie | KM-ALG |
-| Penicillin-Allergie | Pen-ALG |
-| Wespenstich | Hymenoptera |
-| Insekten-Hymenoptera-Allergie | Insekt-ALG |
-| Asthma bronchiale | Asthma |
+| Original                      | Abkürzung   |
+| ----------------------------- | ----------- |
+| Akuter                        | Ak.         |
+| transmuraler                  | transm.     |
+| Myokardinfarkt                | MI          |
+| Vorderwand                    | VW          |
+| kardiogener Schock            | KS          |
+| nicht näher bezeichnet        | n.n.b.      |
+| Pneumonie                     | PNA         |
+| septischer Schock             | SepS        |
+| ambulant erworben             | CAP         |
+| Hirninfarkt                   | Stroke      |
+| zerebraler Arterien           | zer.Art.    |
+| Thrombose                     | Thrombose   |
+| Anaphylaktischer Schock       | AnaphS      |
+| Diabetes mellitus             | DM          |
+| Typ 2                         | T2          |
+| Hypoglykämie                  | Hypo        |
+| mit Koma                      | +Koma       |
+| bekannt                       | bekannt     |
+| Eingeschränkte Nierenfunktion | NI          |
+| Kontrastmittel-Allergie       | KM-ALG      |
+| Penicillin-Allergie           | Pen-ALG     |
+| Wespenstich                   | Hymenoptera |
+| Insekten-Hymenoptera-Allergie | Insekt-ALG  |
+| Asthma bronchiale             | Asthma      |
 
 ---
 
 **Referenzen:**
+
 - FHIR R4: https://hl7.org/fhir/R4/
 - LOINC: https://loinc.org
 - ICD-10-GM: https://www.bfarm.de
 - ESC 2023: 10.1093/eurheartj/ehad191
 - SSC 2021: 10.1097/CCM.0000000000005337
 
-**Autor:** Alex Köllnberger
+**Autor:** Alex Kölnberger
 **Lizenz:** MIT

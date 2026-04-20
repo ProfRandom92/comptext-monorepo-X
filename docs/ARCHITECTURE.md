@@ -2,7 +2,7 @@
 
 > **Version:** 5.0.0
 > **Letzte Aktualisierung:** 2024
-> **Autor:** Alex Köllnberger
+> **Autor:** Alex Kölnberger
 
 ---
 
@@ -193,25 +193,25 @@ FHIR Bundle (1847 Tokens)
 
 **PHI Entfernung:**
 
-| Feld | Aktion | GDPR-Basis |
-|------|--------|------------|
-| `Patient.name` | Entfernt | Art. 17 |
-| `Patient.birthDate` | → Dekade ("60s") | Art. 5(1)(c) |
-| `Patient.address` | Entfernt | Art. 17 |
-| `Patient.telecom` | Entfernt | Art. 17 |
-| `Patient.identifier` | FNV-1a Hash | Art. 25 |
-| Freitext > 100 Zeichen | Gekürzt/Hash | Art. 5(1)(c) |
+| Feld                   | Aktion           | GDPR-Basis   |
+| ---------------------- | ---------------- | ------------ |
+| `Patient.name`         | Entfernt         | Art. 17      |
+| `Patient.birthDate`    | → Dekade ("60s") | Art. 5(1)(c) |
+| `Patient.address`      | Entfernt         | Art. 17      |
+| `Patient.telecom`      | Entfernt         | Art. 17      |
+| `Patient.identifier`   | FNV-1a Hash      | Art. 25      |
+| Freitext > 100 Zeichen | Gekürzt/Hash     | Art. 5(1)(c) |
 
 **PHI Regex-Patterns:**
 
 ```typescript
 const PHI_PATTERNS = {
-  postalCode:    /\b\d{5}\b/g,                    // Deutsche PLZ
-  phoneNumber:   /\+49[-\s]?\d{2,4}[-\s]?\d{3,}/g,  // Telefonnummern
-  iban:          /DE\d{2}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{2}/gi,
-  mobileNumber:  /01[567]\d{1}[-\s]?\d{7,}/g,     // Mobilfunk
-  nameInText:    /(?<=[^A-ZÄÖÜa-zäöü.!?]\s)(?!Herr|Frau|Dr|Prof).../g,
-}
+  postalCode: /\b\d{5}\b/g, // Deutsche PLZ
+  phoneNumber: /\+49[-\s]?\d{2,4}[-\s]?\d{3,}/g, // Telefonnummern
+  iban: /DE\d{2}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{2}/gi,
+  mobileNumber: /01[567]\d{1}[-\s]?\d{7,}/g, // Mobilfunk
+  nameInText: /(?<=[^A-ZÄÖÜa-zäöü.!?]\s)(?!Herr|Frau|Dr|Prof).../g,
+};
 ```
 
 ---
@@ -282,23 +282,23 @@ const PHI_PATTERNS = {
 
 **Vollständige LOINC-zu-Key Mapping:**
 
-| LOINC | Key | Bedeutung |
-|-------|-----|-----------|
+| LOINC   | Key   | Bedeutung                    |
+| ------- | ----- | ---------------------------- |
 | 89579-7 | hsTnI | Troponin I, high-sensitivity |
-| 13969-1 | CKMB | Creatin-Kinase MB |
-| 2519-7 | LAC | Laktat |
-| 33959-8 | PCT | Procalcitonin |
-| 1988-5 | CRP | C-reaktives Protein |
-| 15074-8 | BZ | Blutzucker |
-| 62238-1 | eGFR | Geschätzte GFR |
-| 55284-4 | BP | Blutdruck (Panel) |
-| 8480-6 | sBP | Systolischer Blutdruck |
-| 8462-4 | dBP | Diastolischer Blutdruck |
-| 8867-4 | HR | Herzfrequenz |
-| 59408-5 | SpO2 | Sauerstoffsättigung |
-| 9279-1 | AF | Atemfrequenz |
-| 8310-5 | Temp | Körpertemperatur |
-| 72107-6 | NIHSS | NIH Stroke Scale |
+| 13969-1 | CKMB  | Creatin-Kinase MB            |
+| 2519-7  | LAC   | Laktat                       |
+| 33959-8 | PCT   | Procalcitonin                |
+| 1988-5  | CRP   | C-reaktives Protein          |
+| 15074-8 | BZ    | Blutzucker                   |
+| 62238-1 | eGFR  | Geschätzte GFR               |
+| 55284-4 | BP    | Blutdruck (Panel)            |
+| 8480-6  | sBP   | Systolischer Blutdruck       |
+| 8462-4  | dBP   | Diastolischer Blutdruck      |
+| 8867-4  | HR    | Herzfrequenz                 |
+| 59408-5 | SpO2  | Sauerstoffsättigung          |
+| 9279-1  | AF    | Atemfrequenz                 |
+| 8310-5  | Temp  | Körpertemperatur             |
+| 72107-6 | NIHSS | NIH Stroke Scale             |
 
 ---
 
@@ -469,34 +469,36 @@ MedGemma 27B / GPT-4 / Claude
 
 **Hauptfunktionen:**
 
-| Funktion | Signatur | Zweck |
-|----------|----------|-------|
-| `runNURSE` | `(bundle: FHIRBundle) => NURSEOutput` | Haupt-Entry-Point |
-| `estimateTokens` | `(text: string) => number` | Token-Schätzung (Heuristik) |
-| `deterministicHash` | `(input: string) => string` | FNV-1a Hash für PHI |
-| `PHI_PATTERNS` | `Record<string, RegExp>` | Regex-Patterns für PHI |
+| Funktion              | Signatur                                 | Zweck                          |
+| --------------------- | ---------------------------------------- | ------------------------------ |
+| `runNURSE`            | `(bundle: FHIRBundle) => NURSEOutput`    | Haupt-Entry-Point              |
+| `estimateTokens`      | `(text: string) => number`               | Token-Schätzung (Heuristik)    |
+| `deterministicHash`   | `(input: string) => string`              | FNV-1a Hash für PHI            |
+| `PHI_PATTERNS`        | `Record<string, RegExp>`                 | Regex-Patterns für PHI         |
 | `deepSanitizeStrings` | `(obj: unknown) => { result, phiFound }` | Rekursive String-Sanitisierung |
 
 **Algorithmen:**
 
 **FNV-1a Hash (32-bit):**
+
 ```typescript
 function fnv1a(input: string): string {
-  let h = 0x811c9dc5
+  let h = 0x811c9dc5;
   for (const char of input) {
-    h ^= char.charCodeAt(0)
-    h = (h * 0x01000193) >>> 0
+    h ^= char.charCodeAt(0);
+    h = (h * 0x01000193) >>> 0;
   }
-  return h.toString(16).padStart(8, "0")
+  return h.toString(16).padStart(8, "0");
 }
 ```
 
 **Token-Schätzung:**
+
 ```typescript
 function estimateTokens(text: string): number {
   // Heuristik: 1 Token ≈ 3.8 Zeichen für JSON/Englisch
   // Abweichung von cl100k_base: ±5%
-  return Math.ceil(text.length / 3.8)
+  return Math.ceil(text.length / 3.8);
 }
 ```
 
@@ -508,23 +510,23 @@ function estimateTokens(text: string): number {
 
 **Hauptfunktionen:**
 
-| Funktion | Signatur | Zweck |
-|----------|----------|-------|
-| `runKVTC` | `(nurse: NURSEOutput) => KVTCOutput` | Haupt-Entry-Point |
-| `runKLayer` | `(nurse) => KLayerOutput` | LOINC → Key Mapping |
-| `runVLayer` | `(kLayer) => VLayerOutput` | Einheits-Normalisierung |
-| `runTLayer` | `(nurse) => TLayerOutput` | Typ-Kodierung |
-| `runCLayer` | `(nurse) => CLayerOutput` | Kontext-Kompression |
+| Funktion    | Signatur                             | Zweck                   |
+| ----------- | ------------------------------------ | ----------------------- |
+| `runKVTC`   | `(nurse: NURSEOutput) => KVTCOutput` | Haupt-Entry-Point       |
+| `runKLayer` | `(nurse) => KLayerOutput`            | LOINC → Key Mapping     |
+| `runVLayer` | `(kLayer) => VLayerOutput`           | Einheits-Normalisierung |
+| `runTLayer` | `(nurse) => TLayerOutput`            | Typ-Kodierung           |
+| `runCLayer` | `(nurse) => CLayerOutput`            | Kontext-Kompression     |
 
 **Konfiguration:**
 
 ```typescript
 // LOINC-zu-Key Mapping
 const LOINC_TO_KEY: Record<string, string> = {
-  "89579-7": "hsTnI",   // Troponin I
-  "8867-4": "HR",       // Heart Rate
+  "89579-7": "hsTnI", // Troponin I
+  "8867-4": "HR", // Heart Rate
   // ... 15 weitere Einträge
-}
+};
 
 // Einheits-Normalisierung
 const UNIT_NORMALIZE: Record<string, [string, number, number]> = {
@@ -532,14 +534,14 @@ const UNIT_NORMALIZE: Record<string, [string, number, number]> = {
   "µg/L": ["µg/L", 1, 1],
   "mm[Hg]": ["mmHg", 1, 0],
   // [targetUnit, conversionFactor, decimalPlaces]
-}
+};
 
 // Klinische Abkürzungen
 const CLINICAL_ABBREV: Array<[RegExp, string]> = [
   [/Akuter/gi, "Ak."],
   [/Myokardinfarkt/gi, "MI"],
   // ... 46 weitere Einträge
-]
+];
 ```
 
 ---
@@ -550,23 +552,23 @@ const CLINICAL_ABBREV: Array<[RegExp, string]> = [
 
 **Hauptfunktionen:**
 
-| Funktion | Signatur | Zweck |
-|----------|----------|-------|
-| `assembleFrame` | `(bundle, nurse, kvtc) => { frame, meta }` | Frame-Assembly |
-| `classifyTriage` | `(vitals, labs, icd10) => TriageClass` | Triage-Algorithmus |
-| `extractAllergies` | `(nurse) => AllergyCode[]` | Allergie-Extraktion |
-| `extractMedications` | `(nurse) => MedicationCode[]` | Medikamenten-Extraktion |
-| `extractVitals` | `(kvtc) => VitalSigns` | Vitalzeichen-Extraktion |
-| `extractLabs` | `(kvtc) => LabValues` | Laborwert-Extraktion |
+| Funktion             | Signatur                                   | Zweck                   |
+| -------------------- | ------------------------------------------ | ----------------------- |
+| `assembleFrame`      | `(bundle, nurse, kvtc) => { frame, meta }` | Frame-Assembly          |
+| `classifyTriage`     | `(vitals, labs, icd10) => TriageClass`     | Triage-Algorithmus      |
+| `extractAllergies`   | `(nurse) => AllergyCode[]`                 | Allergie-Extraktion     |
+| `extractMedications` | `(nurse) => MedicationCode[]`              | Medikamenten-Extraktion |
+| `extractVitals`      | `(kvtc) => VitalSigns`                     | Vitalzeichen-Extraktion |
+| `extractLabs`        | `(kvtc) => LabValues`                      | Laborwert-Extraktion    |
 
 **Allergy-Mapping:**
 
 ```typescript
-const ALLERGY_SNOMED_MAP: Record<string, { name, sev, ki }> = {
+const ALLERGY_SNOMED_MAP: Record<string, { name; sev; ki }> = {
   "418425009": { name: "Jodkontrastmittel", sev: "II", ki: ["V08", "V09"] },
   "416098002": { name: "Penicillin", sev: "III", ki: ["J01CA", "J01CE"] },
   "241929008": { name: "Hymenoptera", sev: "III", ki: [] },
-}
+};
 ```
 
 **Medikamenten-Alerts:**
@@ -574,12 +576,12 @@ const ALLERGY_SNOMED_MAP: Record<string, { name, sev, ki }> = {
 ```typescript
 // NOAC → Lyse-Kontraindikation
 if (atc.startsWith("B01AF") || atc.startsWith("B01AE")) {
-  ki.push("LYSE-KI:NOAC<48h")
+  ki.push("LYSE-KI:NOAC<48h");
 }
 
 // Sulfonylharnstoff → Hypoglykämie-Rebound
 if (atc.startsWith("A10BB")) {
-  ki.push("HYPO-RISK:SHT-Rebound-24h")
+  ki.push("HYPO-RISK:SHT-Rebound-24h");
 }
 ```
 
@@ -590,6 +592,7 @@ if (atc.startsWith("A10BB")) {
 **Zweck:** Zentrale TypeScript-Typdefinitionen
 
 **Haupttypen:**
+
 - `CompTextFrame` — Finaler Output
 - `PipelineResult` — Pipeline-Ergebnis
 - `NURSEOutput` / `KVTCOutput` — Stage-Outputs
@@ -605,15 +608,16 @@ if (atc.startsWith("A10BB")) {
 
 **Szenarien:**
 
-| Szenario | ICD-10 | Kritische Werte | Besonderheit |
-|----------|--------|-----------------|--------------|
-| STEMI | I21.09 | hsTnI 4847, sBP 82 | Kontrastmittel-Allergie |
-| Sepsis | A41.9, J18.9 | Laktat 4.8, PCT 38.4 | Penicillin-Allergie |
-| Stroke | I63.3 | NIHSS 14 | Rivaroxaban → Lyse-KI |
-| Anaphylaxie | T78.2 | sBP 64, SpO2 87% | Hymenoptera + Asthma |
-| DM Hypo | E11.64 | BZ 1.8, eGFR 38 | Glibenclamid → Rebound |
+| Szenario    | ICD-10       | Kritische Werte      | Besonderheit            |
+| ----------- | ------------ | -------------------- | ----------------------- |
+| STEMI       | I21.09       | hsTnI 4847, sBP 82   | Kontrastmittel-Allergie |
+| Sepsis      | A41.9, J18.9 | Laktat 4.8, PCT 38.4 | Penicillin-Allergie     |
+| Stroke      | I63.3        | NIHSS 14             | Rivaroxaban → Lyse-KI   |
+| Anaphylaxie | T78.2        | sBP 64, SpO2 87%     | Hymenoptera + Asthma    |
+| DM Hypo     | E11.64       | BZ 1.8, eGFR 38      | Glibenclamid → Rebound  |
 
 **Quellen:**
+
 - ESC Guidelines 2023 (STEMI)
 - Surviving Sepsis Campaign 2021
 - AHA/ASA Stroke Guidelines 2019
@@ -634,12 +638,14 @@ if (atc.startsWith("A10BB")) {
 **Entscheidung:** FNV-1a 32-bit für PHI-Hashing verwenden.
 
 **Begründung:**
+
 - GDPR erfordert Nicht-Umkehrbarkeit, nicht kryptographische Sicherheit
 - FNV-1a ist schnell und deterministisch
 - Audit-Trails benötigen gleichen Hash für gleiche Eingabe über Sessions
 - Keine Node-Crypto-Dependency für Browser-Targets
 
 **Konsequenzen:**
+
 - (+) Schnelle Berechnung
 - (+) Deterministisch (gleiche Eingabe → gleicher Hash)
 - (+) Keine externe Dependency
@@ -659,12 +665,14 @@ if (atc.startsWith("A10BB")) {
 **Entscheidung:** NURSE, KVTC und Triage sind reine Rule-Engines ohne LLM.
 
 **Begründung:**
+
 - Determinismus ist für medizinische Anwendungen zwingend
 - Token-Kosten für zweistufigen LLM-Ansatz wären kontraproduktiv
 - Auditierbarkeit — jede Kompressionsregel ist nachvollziehbar
 - Latenz: 6ms vs. 500ms+ bei LLM-Aufruf
 
 **Konsequenzen:**
+
 - (+) Deterministisch
 - (+) Schnell (~6ms Gesamtlatenz)
 - (+) Vollständig auditierbar
@@ -686,12 +694,14 @@ if (atc.startsWith("A10BB")) {
 **Entscheidung:** Observations werden primär über LOINC-Codes identifiziert, nicht über Freitext.
 
 **Begründung:**
+
 - LOINC 2.76 enthält 100.000+ klinische Konzepte
 - International standardisiert (ISO 18104)
 - Ermöglicht Cross-Institution-Interoperabilität
 - SNOMED CT als Backup für Diagnosen
 
 **Konsequenzen:**
+
 - (+) Internationale Kompatibilität
 - (+) Eindeutige Identifizierung
 - (+) Weniger Fehleranfällig als Text-Matching
@@ -712,6 +722,7 @@ if (atc.startsWith("A10BB")) {
 **Entscheidung:** Das `v` Feld im Frame muss bei jeder inkompatiblen Änderung erhöht werden.
 
 **Konvention:**
+
 ```
 Major.Minor.Patch
 v = Major  (inkompatible Änderungen)
@@ -719,6 +730,7 @@ Patch-Version nicht im Frame enthalten
 ```
 
 **Konsequenzen:**
+
 - (+) Explizite Versionskontrolle
 - (+) LLM-Prompts können auf Version prüfen
 - (+) Migration-Pfade sind klar definiert
@@ -736,11 +748,13 @@ Patch-Version nicht im Frame enthalten
 **Entscheidung:** Heuristik `chars / 3.8` — weicht ±5% von cl100k_base ab.
 
 **Begründung:**
+
 - Für Browser-Environments: tiktoken läuft nicht im Browser
 - Produktiv: tiktoken als optionale Peer-Dependency
 - Heuristik bleibt als Fallback
 
 **Konsequenzen:**
+
 - (+) Keine externe Dependency für Basis-Funktionalität
 - (+) Schnelle Schätzung
 - (-) ±5% Abweichung von echten Tokenizern
@@ -757,12 +771,14 @@ Patch-Version nicht im Frame enthalten
 **Entscheidung:** ALG, RX, TRIAGE-Felder werden nie komprimiert.
 
 **Nie komprimiert:**
+
 - Allergie-Name (vollständig ausgeschrieben)
 - Medikamenten-Name (INN)
 - Triage-Klasse (immer P1/P2/P3)
 - Kontraindikations-Flags
 
 **Konsequenzen:**
+
 - (+) Maximale Sicherheit
 - (+) Keine Abkürzungs-Mehrdeutigkeit
 - (-) Größerer Token-Overhead für diese Felder
@@ -781,6 +797,7 @@ Patch-Version nicht im Frame enthalten
 **Entscheidung:** Monorepo mit npm workspaces.
 
 **Struktur:**
+
 ```
 comptext-monorepo/
 ├── packages/
@@ -792,6 +809,7 @@ comptext-monorepo/
 ```
 
 **Konsequenzen:**
+
 - (+) Geteilte Types zwischen Packages
 - (+) Einfache lokale Entwicklung
 - (+) Konsistente Versionierung
@@ -831,15 +849,15 @@ comptext-monorepo/
 
 ### 7.2 PHI-Entfernung Details
 
-| Kategorie | Beispiel | Aktion | Output |
-|-----------|----------|--------|--------|
-| Name | "Max Mustermann" | Entfernt | - |
-| Geburtsdatum | "1956-04-22" | Dekade | "60s" |
-| Adresse | "Hauptstraße 42, 68159" | Entfernt | - |
-| Telefon | "+49 170 1234567" | Entfernt | - |
-| Patienten-ID | "KMH-2024-038471" | FNV-1a | "3f8a1c2d" |
-| PLZ im Text | "wohnt in 68159" | Ersetzt | "[PHI:postalCode:a1b2c3d4]" |
-| IBAN | "DE89 3704 0044..." | Ersetzt | "[PHI:iban:e5f6g7h8]" |
+| Kategorie    | Beispiel                | Aktion   | Output                      |
+| ------------ | ----------------------- | -------- | --------------------------- |
+| Name         | "Max Mustermann"        | Entfernt | -                           |
+| Geburtsdatum | "1956-04-22"            | Dekade   | "60s"                       |
+| Adresse      | "Hauptstraße 42, 68159" | Entfernt | -                           |
+| Telefon      | "+49 170 1234567"       | Entfernt | -                           |
+| Patienten-ID | "KMH-2024-038471"       | FNV-1a   | "3f8a1c2d"                  |
+| PLZ im Text  | "wohnt in 68159"        | Ersetzt  | "[PHI:postalCode:a1b2c3d4]" |
+| IBAN         | "DE89 3704 0044..."     | Ersetzt  | "[PHI:iban:e5f6g7h8]"       |
 
 ### 7.3 Sicherheitskritische Datenerhaltung
 
@@ -870,35 +888,35 @@ comptext-monorepo/
 
 ### 8.1 Latenz-Benchmarks
 
-| Operation | Durchschnitt | P99 | Umgebung |
-|-----------|-------------|-----|----------|
-| NURSE Stage | 2 ms | 5 ms | Node.js 20, M2 Pro |
-| KVTC Stage | 3 ms | 8 ms | Node.js 20, M2 Pro |
-| Frame Assembly | 1 ms | 3 ms | Node.js 20, M2 Pro |
-| **Pipeline gesamt** | **~6 ms** | **16 ms** | Node.js 20, M2 Pro |
+| Operation           | Durchschnitt | P99       | Umgebung           |
+| ------------------- | ------------ | --------- | ------------------ |
+| NURSE Stage         | 2 ms         | 5 ms      | Node.js 20, M2 Pro |
+| KVTC Stage          | 3 ms         | 8 ms      | Node.js 20, M2 Pro |
+| Frame Assembly      | 1 ms         | 3 ms      | Node.js 20, M2 Pro |
+| **Pipeline gesamt** | **~6 ms**    | **16 ms** | Node.js 20, M2 Pro |
 
-*FHIR Bundle ~5KB*
+_FHIR Bundle ~5KB_
 
 ### 8.2 Token-Reduktion nach Szenario
 
-| Szenario | FHIR Raw | Post-NURSE | Post-KVTC | CompText | Reduktion |
-|----------|----------|------------|-----------|----------|-----------|
-| STEMI | 1,847 | 1,621 | 387 | 112 | **93.9%** |
-| Sepsis | 2,213 | 1,934 | 461 | 131 | **94.1%** |
-| Stroke | 2,041 | 1,788 | 427 | 124 | **93.9%** |
-| Anaphylaxie | 1,742 | 1,523 | 363 | 108 | **93.8%** |
-| DM Hypo | 1,963 | 1,717 | 410 | 119 | **93.9%** |
+| Szenario    | FHIR Raw | Post-NURSE | Post-KVTC | CompText | Reduktion |
+| ----------- | -------- | ---------- | --------- | -------- | --------- |
+| STEMI       | 1,847    | 1,621      | 387       | 112      | **93.9%** |
+| Sepsis      | 2,213    | 1,934      | 461       | 131      | **94.1%** |
+| Stroke      | 2,041    | 1,788      | 427       | 124      | **93.9%** |
+| Anaphylaxie | 1,742    | 1,523      | 363       | 108      | **93.8%** |
+| DM Hypo     | 1,963    | 1,717      | 410       | 119      | **93.9%** |
 
 ### 8.3 Inferenz-Latenz-Verbesserung (MedGemma 27B)
 
-| Szenario | Raw FHIR | CompText | Verbesserung |
-|----------|----------|----------|--------------|
-| STEMI | 4,180 ms | 680 ms | **83.7%** |
-| Sepsis | 4,940 ms | 790 ms | **84.0%** |
-| Stroke | 4,620 ms | 730 ms | **84.2%** |
-| **Durchschnitt** | **4,434 ms** | **712 ms** | **83.9%** |
+| Szenario         | Raw FHIR     | CompText   | Verbesserung |
+| ---------------- | ------------ | ---------- | ------------ |
+| STEMI            | 4,180 ms     | 680 ms     | **83.7%**    |
+| Sepsis           | 4,940 ms     | 790 ms     | **84.0%**    |
+| Stroke           | 4,620 ms     | 730 ms     | **84.2%**    |
+| **Durchschnitt** | **4,434 ms** | **712 ms** | **83.9%**    |
 
-*A100 40GB, batch=1*
+_A100 40GB, batch=1_
 
 ---
 
@@ -945,21 +963,21 @@ describe("Full Pipeline — TRAUMA", () => {
 const LOINC_TO_KEY: Record<string, string> = {
   // ... bestehende Einträge
   "YOUR-LOINC": "ABBREV",
-}
+};
 ```
 
 ### 9.3 Neue Allergy-Typen unterstützen
 
 ```typescript
 // In compiler/triage.ts
-const ALLERGY_SNOMED_MAP: Record<string, { name, sev, ki }> = {
+const ALLERGY_SNOMED_MAP: Record<string, { name; sev; ki }> = {
   // ... bestehende
   "YOUR-SNOMED": {
     name: "AllergenName",
     sev: "II",
-    ki: ["ATC_CODE"]
+    ki: ["ATC_CODE"],
   },
-}
+};
 ```
 
 ---
@@ -968,33 +986,33 @@ const ALLERGY_SNOMED_MAP: Record<string, { name, sev, ki }> = {
 
 ### Klinische Leitlinien
 
-| Thema | Quelle | DOI/URL |
-|-------|--------|---------|
-| STEMI | ESC Guidelines 2023 | 10.1093/eurheartj/ehad191 |
-| Sepsis | Surviving Sepsis Campaign 2021 | 10.1097/CCM.0000000000005337 |
-| Stroke | AHA/ASA Guidelines 2019 | 10.1161/STR.0000000000000211 |
-| Anaphylaxie | WAO Guidelines 2020 | https://www.worldallergy.org |
-| Diabetes | ADA Standards of Care 2024 | https://diabetesjournals.org |
-| Triage | Manchester Triage System | https://manchestertriage.org |
-| Triage | ESI v4 | https://www.ahrq.gov |
+| Thema       | Quelle                         | DOI/URL                      |
+| ----------- | ------------------------------ | ---------------------------- |
+| STEMI       | ESC Guidelines 2023            | 10.1093/eurheartj/ehad191    |
+| Sepsis      | Surviving Sepsis Campaign 2021 | 10.1097/CCM.0000000000005337 |
+| Stroke      | AHA/ASA Guidelines 2019        | 10.1161/STR.0000000000000211 |
+| Anaphylaxie | WAO Guidelines 2020            | https://www.worldallergy.org |
+| Diabetes    | ADA Standards of Care 2024     | https://diabetesjournals.org |
+| Triage      | Manchester Triage System       | https://manchestertriage.org |
+| Triage      | ESI v4                         | https://www.ahrq.gov         |
 
 ### Technische Standards
 
-| Standard | Version | URL |
-|----------|---------|-----|
-| FHIR R4 | 4.0.1 | https://hl7.org/fhir/R4 |
-| LOINC | 2.76 | https://loinc.org |
-| SNOMED CT | International 2024 | https://snomed.org |
-| ICD-10-GM | 2024 | https://www.bfarm.de |
-| ATC | 2024 | https://www.whocc.no |
+| Standard  | Version            | URL                     |
+| --------- | ------------------ | ----------------------- |
+| FHIR R4   | 4.0.1              | https://hl7.org/fhir/R4 |
+| LOINC     | 2.76               | https://loinc.org       |
+| SNOMED CT | International 2024 | https://snomed.org      |
+| ICD-10-GM | 2024               | https://www.bfarm.de    |
+| ATC       | 2024               | https://www.whocc.no    |
 
 ### Tokenizer
 
-| Modell | Tokenizer | Encoding |
-|--------|-----------|----------|
-| GPT-4 | cl100k_base | BPE |
-| Claude | claude-v1 | BPE |
-| MedGemma | SentencePiece | Unigram |
+| Modell   | Tokenizer     | Encoding |
+| -------- | ------------- | -------- |
+| GPT-4    | cl100k_base   | BPE      |
+| Claude   | claude-v1     | BPE      |
+| MedGemma | SentencePiece | Unigram  |
 
 ---
 
@@ -1003,6 +1021,7 @@ const ALLERGY_SNOMED_MAP: Record<string, { name, sev, ki }> = {
 Die CompText-Architektur ist deterministisch, GDPR-konform und sicherheitsorientiert. Die 3-Stage-Pipeline erreicht 93-94% Token-Reduktion bei vollständiger Erhaltung sicherheitskritischer Daten. Alle Design-Entscheidungen priorisieren medizinische Sicherheit über Token-Effizienz.
 
 **Nächste Schritte:**
+
 - [ ] MCP-Server für Claude Desktop
 - [ ] Erweiterte LOINC-Mappings
 - [ ] Batch-Verarbeitung
