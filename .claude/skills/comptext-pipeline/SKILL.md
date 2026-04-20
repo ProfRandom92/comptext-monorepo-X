@@ -28,37 +28,41 @@ FHIR Bundle (1847 tokens)
 
 GDPR Art. 25 compliant PHI scrubbing:
 
-| Removed | Preserved |
-|---------|-----------|
-| Patient.name | Patient.gender |
-| Patient.birthDate | Patient.age (decade) |
-| Patient.address | All coded fields |
-| Patient.telecom | Observation values |
-| Free-text >100 chars | Allergy severity |
+| Removed              | Preserved            |
+| -------------------- | -------------------- |
+| Patient.name         | Patient.gender       |
+| Patient.birthDate    | Patient.age (decade) |
+| Patient.address      | All coded fields     |
+| Patient.telecom      | Observation values   |
+| Free-text >100 chars | Allergy severity     |
 
 ### Stage 2: KVTC (Key-Value-Type-Code)
 
 Four deterministic compression layers:
 
 **K - Key extraction:** FHIR structural overhead → compact keys
+
 ```
 "code":{"coding":[{"system":"http://loinc.org","code":"8867-4"}]}
 → HR
 ```
 
 **V - Value normalization:** SI units, significant figures
+
 ```
 "valueQuantity":{"value":118,"unit":"/min"}
 → 118/min
 ```
 
 **T - Type encoding:** FHIR types → CompText codes
+
 ```
 MedicationStatement → MED
 Observation → OBS
 ```
 
 **C - Context compression:** Clinical abbreviations
+
 ```
 "Akuter transmuraler Myokardinfarkt" → "Ak. transm. MI"
 ```
@@ -67,30 +71,30 @@ Observation → OBS
 
 Deterministic triage per ESC/AHA/SSC guidelines:
 
-| Criterion | P1 Threshold |
-|-----------|-------------|
-| Systolic BP | < 90 mmHg |
-| SpO2 | < 90% |
-| Heart rate | > 150 bpm |
-| Lactate | > 4.0 mmol/L |
-| hsTroponin I | > 52 ng/L |
+| Criterion    | P1 Threshold |
+| ------------ | ------------ |
+| Systolic BP  | < 90 mmHg    |
+| SpO2         | < 90%        |
+| Heart rate   | > 150 bpm    |
+| Lactate      | > 4.0 mmol/L |
+| hsTroponin I | > 52 ng/L    |
 
 ## Usage
 
 ### Basic Pipeline Execution
 
 ```typescript
-import { pipeline, FHIR_STEMI, serializeFrame } from "@comptext/core"
+import { pipeline, FHIR_STEMI, serializeFrame } from "@comptext/core";
 
 // Run pipeline on built-in scenario
-const result = await pipeline(FHIR_STEMI)
+const result = await pipeline(FHIR_STEMI);
 
-console.log(result.frame.tri)        // "P1"
-console.log(result.frame.alg)        // Allergies
-console.log(result.benchmark.reduction_pct)  // 93.9
+console.log(result.frame.tri); // "P1"
+console.log(result.frame.alg); // Allergies
+console.log(result.benchmark.reduction_pct); // 93.9
 
 // Get compact DSL string
-const comptext = serializeFrame(result.frame)
+const comptext = serializeFrame(result.frame);
 ```
 
 ### Process Custom FHIR Bundle
@@ -110,21 +114,21 @@ const result = await pipeline(myBundle)
 ### Run All Scenarios
 
 ```typescript
-import { pipelineAll } from "@comptext/core"
+import { pipelineAll } from "@comptext/core";
 
-const allResults = await pipelineAll()
+const allResults = await pipelineAll();
 // Returns: { STEMI: {...}, SEPSIS: {...}, ... }
 ```
 
 ## Built-in Clinical Scenarios
 
-| Scenario | ICD-10 | Key Values | Safety Alert |
-|----------|--------|------------|--------------|
-| STEMI | I21.09 | hsTnI 4847, sBP 82 | Jodkontrastmittel ALG |
-| SEPSIS | A41.9 | Laktat 4.8, PCT 38.4 | Penicillin Grade III |
-| STROKE | I63.3 | NIHSS 14, Onset 2h | Rivaroxaban LYSE-KI |
-| ANAPHYLAXIE | T78.2 | sBP 64, SpO2 87 | Hymenoptera + Asthma |
-| DM_HYPO | E11.64 | BZ 1.8, eGFR 38 | Glibenclamid rebound |
+| Scenario    | ICD-10 | Key Values           | Safety Alert          |
+| ----------- | ------ | -------------------- | --------------------- |
+| STEMI       | I21.09 | hsTnI 4847, sBP 82   | Jodkontrastmittel ALG |
+| SEPSIS      | A41.9  | Laktat 4.8, PCT 38.4 | Penicillin Grade III  |
+| STROKE      | I63.3  | NIHSS 14, Onset 2h   | Rivaroxaban LYSE-KI   |
+| ANAPHYLAXIE | T78.2  | sBP 64, SpO2 87      | Hymenoptera + Asthma  |
+| DM_HYPO     | E11.64 | BZ 1.8, eGFR 38      | Glibenclamid rebound  |
 
 ## Output Format (CompText Frame)
 
@@ -156,42 +160,45 @@ GDPR:ART9 PHI:3f8a1c2d TS:1710509000
 ## Additional Resources
 
 ### Reference Files
+
 - **`references/fhir-mapping.md`** - LOINC/SNOMED/ICD-10 mappings
 - **`references/triage-criteria.md`** - P1/P2/P3 thresholds by guideline
 - **`references/gdpr-compliance.md`** - Privacy implementation details
 
 ### Example Files
+
 - **`examples/stemi-pipeline.ts`** - Complete STEMI processing example
 - **`examples/custom-bundle.ts`** - Processing custom FHIR data
 
 ### Scripts
+
 - **`scripts/benchmark.ts`** - Token reduction benchmarking
 - **`scripts/validate-frame.ts`** - Frame structure validation
 
 ## Error Handling
 
 ```typescript
-import { CompTextError } from "@comptext/core"
+import { CompTextError } from "@comptext/core";
 
 try {
-  const result = await pipeline(bundle)
+  const result = await pipeline(bundle);
 } catch (error) {
   if (error instanceof CompTextError) {
-    console.log(error.code)  // "INVALID_FHIR" | "PHI_SCRUB_FAILED" | ...
-    console.log(error.context)
+    console.log(error.code); // "INVALID_FHIR" | "PHI_SCRUB_FAILED" | ...
+    console.log(error.context);
   }
 }
 ```
 
 ## Benchmarks
 
-| Scenario | FHIR Raw | CompText | Reduction |
-|----------|----------|----------|-----------|
-| STEMI | 1,847 | 112 | 93.9% |
-| SEPSIS | 2,213 | 131 | 94.1% |
-| STROKE | 2,041 | 124 | 93.9% |
-| ANAPHYLAXIE | 1,742 | 108 | 93.8% |
-| DM_HYPO | 1,963 | 119 | 93.9% |
+| Scenario    | FHIR Raw | CompText | Reduction |
+| ----------- | -------- | -------- | --------- |
+| STEMI       | 1,847    | 112      | 93.9%     |
+| SEPSIS      | 2,213    | 131      | 94.1%     |
+| STROKE      | 2,041    | 124      | 93.9%     |
+| ANAPHYLAXIE | 1,742    | 108      | 93.8%     |
+| DM_HYPO     | 1,963    | 119      | 93.9%     |
 
 ## Clinical References
 

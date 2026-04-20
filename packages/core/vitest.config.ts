@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config"
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
@@ -9,13 +9,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
       reportsDirectory: "./coverage",
-      exclude: [
-        "node_modules/",
-        "dist/",
-        "**/*.d.ts",
-        "**/*.config.ts",
-        "tests/",
-      ],
+      exclude: ["node_modules/", "dist/", "**/*.d.ts", "**/*.config.ts", "tests/"],
       thresholds: {
         lines: 80,
         functions: 80,
@@ -24,4 +18,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

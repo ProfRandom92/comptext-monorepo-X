@@ -17,12 +17,12 @@ FHIR Bundle (1,847 tokens)
 
 ### Core Principles
 
-| Principle | Description |
-|-----------|-------------|
-| **Deterministic** | Same input → same output; no LLM in the pipeline |
-| **Safety-first** | ALG, RX, TRIAGE fields are never compressed |
-| **GDPR-compliant** | PHI is one-way hashed (FNV-1a), never stored in plaintext |
-| **Token-efficient** | >90% reduction vs. raw FHIR JSON |
+| Principle           | Description                                               |
+| ------------------- | --------------------------------------------------------- |
+| **Deterministic**   | Same input → same output; no LLM in the pipeline          |
+| **Safety-first**    | ALG, RX, TRIAGE fields are never compressed               |
+| **GDPR-compliant**  | PHI is one-way hashed (FNV-1a), never stored in plaintext |
+| **Token-efficient** | >90% reduction vs. raw FHIR JSON                          |
 
 ---
 
@@ -53,14 +53,14 @@ comptext-monorepo/
 
 PHI scrubbing per GDPR Art. 25 (data protection by design):
 
-| Removed | Preserved |
-|---------|-----------|
-| `Patient.name` | `Patient.gender` |
-| `Patient.birthDate` | Age (decade approximation: "60s") |
-| `Patient.address` | All coded fields (LOINC, SNOMED, ICD-10) |
-| `Patient.telecom` | Observation values + units |
-| All `identifier.value` | Medication dose + frequency |
-| Free-text narrative > 100 chars | Allergy severity grades |
+| Removed                         | Preserved                                |
+| ------------------------------- | ---------------------------------------- |
+| `Patient.name`                  | `Patient.gender`                         |
+| `Patient.birthDate`             | Age (decade approximation: "60s")        |
+| `Patient.address`               | All coded fields (LOINC, SNOMED, ICD-10) |
+| `Patient.telecom`               | Observation values + units               |
+| All `identifier.value`          | Medication dose + frequency              |
+| Free-text narrative > 100 chars | Allergy severity grades                  |
 
 - PHI fields are replaced with a deterministic **FNV-1a hash**
 - Duplicate observations (same LOINC code) are deduplicated
@@ -117,15 +117,15 @@ Clinical abbreviations (German → compact):
 
 Deterministic triage classification (ESC/AHA/SSC/WAO guidelines):
 
-| Criterion | P1 Threshold | Source |
-|-----------|-------------|--------|
-| Systolic BP | < 90 mmHg | ESC 2023 |
-| SpO2 | < 90% | ERC |
-| Heart rate | > 150 /min | AHA ACLS |
-| Lactate | > 4.0 mmol/L | SSC 2021 |
-| hsTroponin I | > 52 ng/L | ESC 2023 |
-| Blood glucose | < 2.5 mmol/L | ADA 2024 |
-| Any P1 ICD-10 | I21.x, I63.x, A41.x, T78.2, ... | — |
+| Criterion     | P1 Threshold                    | Source   |
+| ------------- | ------------------------------- | -------- |
+| Systolic BP   | < 90 mmHg                       | ESC 2023 |
+| SpO2          | < 90%                           | ERC      |
+| Heart rate    | > 150 /min                      | AHA ACLS |
+| Lactate       | > 4.0 mmol/L                    | SSC 2021 |
+| hsTroponin I  | > 52 ng/L                       | ESC 2023 |
+| Blood glucose | < 2.5 mmol/L                    | ADA 2024 |
+| Any P1 ICD-10 | I21.x, I63.x, A41.x, T78.2, ... | —        |
 
 **Token reduction: ~94% final frame vs. raw FHIR**
 
@@ -180,11 +180,11 @@ Deterministic triage classification (ESC/AHA/SSC/WAO guidelines):
 
 ## Performance
 
-| Metric | Value |
-|--------|-------|
+| Metric                         | Value             |
+| ------------------------------ | ----------------- |
 | Pipeline latency (Node.js, M1) | < 5 ms per bundle |
-| Memory (typical bundle) | < 2 MB peak |
-| MedGemma 27B inference speedup | **83.9%** faster |
+| Memory (typical bundle)        | < 2 MB peak       |
+| MedGemma 27B inference speedup | **83.9%** faster  |
 
 ---
 

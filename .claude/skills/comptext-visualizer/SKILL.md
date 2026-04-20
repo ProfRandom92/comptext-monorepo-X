@@ -76,10 +76,10 @@ function App() {
 ### Programmatischer Zugriff
 
 ```typescript
-import { pipeline, serializeFrame } from "@comptext/core"
+import { pipeline, serializeFrame } from "@comptext/core";
 
 // Pipeline ausführen
-const result = await pipeline(FHIR_STEMI)
+const result = await pipeline(FHIR_STEMI);
 
 // Für Visualizer aufbereiten
 const visualizerData = {
@@ -90,9 +90,9 @@ const visualizerData = {
     { name: "FHIR Raw", tokens: result.input.token_count },
     { name: "Post-NURSE", tokens: result.benchmark.tokens_after_nurse },
     { name: "Post-KVTC", tokens: result.benchmark.tokens_after_kvtc },
-    { name: "CompText", tokens: result.benchmark.tokens_final }
-  ]
-}
+    { name: "CompText", tokens: result.benchmark.tokens_final },
+  ],
+};
 ```
 
 ## Verzeichnisstruktur
@@ -123,9 +123,9 @@ Zeigt die Token-Reduktion als gestapeltes Balkendiagramm:
 
 ```typescript
 interface TokenChartProps {
-  stages: PipelineStage[]
-  showPercentages?: boolean
-  colorScheme?: "clinical" | "technical"
+  stages: PipelineStage[];
+  showPercentages?: boolean;
+  colorScheme?: "clinical" | "technical";
 }
 ```
 
@@ -135,9 +135,9 @@ Zeigt den CompText Frame mit Syntax-Highlighting:
 
 ```typescript
 interface FrameViewProps {
-  frame: CompTextFrame
-  highlightSafety?: boolean
-  expandSections?: string[]
+  frame: CompTextFrame;
+  highlightSafety?: boolean;
+  expandSections?: string[];
 }
 ```
 
@@ -145,22 +145,22 @@ interface FrameViewProps {
 
 Visualisiert Sicherheitskritische Informationen:
 
-| Badge | Bedeutung | Farbe |
-|-------|-----------|-------|
-| ALG | Allergie vorhanden | Rot |
-| RX | Medikation aktiv | Blau |
-| TRI:P1 | Kritische Triage | Rot |
-| TRI:P2 | Moderate Triage | Orange |
+| Badge  | Bedeutung          | Farbe  |
+| ------ | ------------------ | ------ |
+| ALG    | Allergie vorhanden | Rot    |
+| RX     | Medikation aktiv   | Blau   |
+| TRI:P1 | Kritische Triage   | Rot    |
+| TRI:P2 | Moderate Triage    | Orange |
 
 ## Unterstützte Szenarien
 
-| Szenario | Visualizer-Ansicht | Besondere Features |
-|----------|-------------------|-------------------|
-| STEMI | I21.09, hsTnI 4847 | Kontrastmittel-ALG Highlight |
-| SEPSIS | A41.9, Laktat 4.8 | PCT-Trend-Indikator |
-| STROKE | I63.3, NIHSS 14 | Zeitfenster-Anzeige |
-| ANAPHYLAXIE | T78.2, sBP 64 | Notfall-Modus |
-| DM_HYPO | E11.64, BZ 1.8 | Hypoglykämie-Warnung |
+| Szenario    | Visualizer-Ansicht | Besondere Features           |
+| ----------- | ------------------ | ---------------------------- |
+| STEMI       | I21.09, hsTnI 4847 | Kontrastmittel-ALG Highlight |
+| SEPSIS      | A41.9, Laktat 4.8  | PCT-Trend-Indikator          |
+| STROKE      | I63.3, NIHSS 14    | Zeitfenster-Anzeige          |
+| ANAPHYLAXIE | T78.2, sBP 64      | Notfall-Modus                |
+| DM_HYPO     | E11.64, BZ 1.8     | Hypoglykämie-Warnung         |
 
 ## Integration mit @comptext/core
 
@@ -168,17 +168,16 @@ Der Visualizer verwendet die Pipeline aus `@comptext/core`:
 
 ```typescript
 // packages/visualizer/src/hooks/usePipeline.ts
-import { pipeline, pipelineAll } from "@comptext/core"
+import { pipeline, pipelineAll } from "@comptext/core";
 
 export function usePipeline(scenario: string) {
-  const [result, setResult] = useState<PipelineResult | null>(null)
+  const [result, setResult] = useState<PipelineResult | null>(null);
 
   useEffect(() => {
-    pipeline(getScenarioBundle(scenario))
-      .then(setResult)
-  }, [scenario])
+    pipeline(getScenarioBundle(scenario)).then(setResult);
+  }, [scenario]);
 
-  return result
+  return result;
 }
 ```
 
@@ -227,6 +226,7 @@ export function usePipeline(scenario: string) {
 ## Weitere Ressourcen
 
 ### Referenz-Dateien
+
 - **`packages/visualizer/src/App.tsx`** - Hauptkomponente
 - **`packages/core/src/index.ts`** - Pipeline API
 - **`docs/DSL_SPEC.md`** - CompText DSL Spezifikation
@@ -238,8 +238,8 @@ export function usePipeline(scenario: string) {
 export default {
   resolve: {
     alias: {
-      "@comptext/core": path.resolve(__dirname, "../core/src")
-    }
-  }
-}
+      "@comptext/core": path.resolve(__dirname, "../core/src"),
+    },
+  },
+};
 ```

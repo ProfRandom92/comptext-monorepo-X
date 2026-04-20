@@ -14,14 +14,14 @@
  * ```
  */
 
-import type { FHIRBundle } from "./data.js"
-import type { PipelineResult } from "./types/index.js"
-import { runNURSE } from "./compiler/nurse.js"
-import { runKVTC } from "./compiler/kvtc.js"
-import { assembleFrame } from "./compiler/triage.js"
-import { CompTextError } from "./types/index.js"
+import type { FHIRBundle } from "./data.js";
+import type { PipelineResult } from "./types/index.js";
+import { runNURSE } from "./compiler/nurse.js";
+import { runKVTC } from "./compiler/kvtc.js";
+import { assembleFrame } from "./compiler/triage.js";
+import { CompTextError } from "./types/index.js";
 
-export { CompTextError } from "./types/index.js"
+export { CompTextError } from "./types/index.js";
 export type {
   CompTextFrame,
   PipelineResult,
@@ -32,7 +32,7 @@ export type {
   TriageClass,
   NURSEOutput,
   KVTCOutput,
-} from "./types/index.js"
+} from "./types/index.js";
 
 export {
   ALL_FHIR_BUNDLES,
@@ -42,9 +42,9 @@ export {
   FHIR_ANAPHYLAXIE,
   FHIR_DM_HYPO,
   TOKEN_BENCHMARKS,
-} from "./data.js"
+} from "./data.js";
 
-export type { FHIRBundle, FHIRPatient, FHIRObservation, FHIRCondition } from "./data.js"
+export type { FHIRBundle, FHIRPatient, FHIRObservation, FHIRCondition } from "./data.js";
 
 /**
  * Run the full CompText pipeline on a FHIR R4 bundle.
@@ -56,34 +56,30 @@ export type { FHIRBundle, FHIRPatient, FHIRObservation, FHIRCondition } from "./
 export async function pipeline(bundle: FHIRBundle): Promise<PipelineResult> {
   // Validate input
   if (!bundle.entry?.length) {
-    throw new CompTextError(
-      "Bundle has no entries",
-      "NO_RESOURCES",
-      { bundle_id: bundle.id },
-    )
+    throw new CompTextError("Bundle has no entries", "NO_RESOURCES", { bundle_id: bundle.id });
   }
 
   if (bundle.resourceType !== "Bundle") {
     throw new CompTextError(
       `Expected resourceType 'Bundle', got '${bundle.resourceType}'`,
-      "INVALID_FHIR",
-    )
+      "INVALID_FHIR"
+    );
   }
 
-  const fhirBytes = JSON.stringify(bundle).length
+  const fhirBytes = JSON.stringify(bundle).length;
 
   // Stage 1: NURSE — PHI scrubbing
-  const nurse = runNURSE(bundle)
+  const nurse = runNURSE(bundle);
 
   if (!nurse.scrubbed) {
-    throw new CompTextError("NURSE stage failed to scrub PHI", "PHI_SCRUB_FAILED")
+    throw new CompTextError("NURSE stage failed to scrub PHI", "PHI_SCRUB_FAILED");
   }
 
   // Stage 2: KVTC — 4-layer compression
-  const kvtc = runKVTC(nurse)
+  const kvtc = runKVTC(nurse);
 
   // Stage 3: Frame assembly + triage
-  const { frame, meta } = assembleFrame(bundle, nurse, kvtc)
+  const { frame, meta } = assembleFrame(bundle, nurse, kvtc);
 
   return {
     input: {
@@ -100,7 +96,7 @@ export async function pipeline(bundle: FHIRBundle): Promise<PipelineResult> {
       reduction_pct: meta.reduction_pct,
       gdpr_compliant: frame.gdpr.art9 && frame.gdpr.minimized,
     },
-  }
+  };
 }
 
 /**
@@ -108,53 +104,55 @@ export async function pipeline(bundle: FHIRBundle): Promise<PipelineResult> {
  * Useful for benchmarking and visualization.
  */
 export async function pipelineAll(): Promise<Record<string, PipelineResult>> {
-  const { ALL_FHIR_BUNDLES } = await import("./data.js")
-  const results: Record<string, PipelineResult> = {}
+  const { ALL_FHIR_BUNDLES } = await import("./data.js");
+  const results: Record<string, PipelineResult> = {};
   for (const [id, bundle] of Object.entries(ALL_FHIR_BUNDLES)) {
-    results[id] = await pipeline(bundle)
+    results[id] = await pipeline(bundle);
   }
-  return results
+  return results;
 }
 
 /** Serialize a CompTextFrame to compact DSL notation */
-export function serializeFrame(frame: { v: string; sc: string; tri: string; vs: Record<string, number | undefined>; lab: Record<string, number | undefined>; alg: Array<{ ag: string; sev: string; rx?: string[] }>; rx: Array<{ name: string; atc: string; dose: string; freq: string; ki?: string[] }>; icd: string[]; ctx?: string; gdpr: { phi_hash: string }; ts: number }): string {
-  const lines: string[] = []
-  lines.push(`CT:v${frame.v} SC:${frame.sc} TRI:${frame.tri}`)
+export function serializeFrame(frame: import("./types/index.js").CompTextFrame): string {
+  const lines: string[] = [];
+  lines.push(`CT:v${frame.v} SC:${frame.sc} TRI:${frame.tri}`);
 
   // Vitals
   const vs = Object.entries(frame.vs)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}:${v}`)
-    .join(" ")
-  if (vs) lines.push(`VS[${vs}]`)
+    .join(" ");
+  if (vs) lines.push(`VS[${vs}]`);
 
   // Labs
   const lab = Object.entries(frame.lab)
     .filter(([, v]) => v !== undefined)
     .map(([k, v]) => `${k}:${v}`)
-    .join(" ")
-  if (lab) lines.push(`LAB[${lab}]`)
+    .join(" ");
+  if (lab) lines.push(`LAB[${lab}]`);
 
   // Allergies — never compressed
   for (const alg of frame.alg) {
-    const ki = alg.rx?.join(",") ?? ""
-    lines.push(`ALG:${alg.ag} SEV:${alg.sev}${ki ? ` KI:[${ki}]` : ""}`)
+    const ki = alg.rx?.join(",") ?? "";
+    lines.push(`ALG:${alg.ag} SEV:${alg.sev}${ki ? ` KI:[${ki}]` : ""}`);
   }
 
   // Medications
   for (const rx of frame.rx) {
-    const ki = rx.ki?.join(",") ?? ""
-    lines.push(`RX:${rx.name} ATC:${rx.atc} DOSE:${rx.dose} FREQ:${rx.freq}${ki ? ` KI:[${ki}]` : ""}`)
+    const ki = rx.ki?.join(",") ?? "";
+    lines.push(
+      `RX:${rx.name} ATC:${rx.atc} DOSE:${rx.dose} FREQ:${rx.freq}${ki ? ` KI:[${ki}]` : ""}`
+    );
   }
 
   // ICD-10
-  lines.push(`ICD:[${frame.icd.join(",")}]`)
+  lines.push(`ICD:[${frame.icd.join(",")}]`);
 
   // Context
-  if (frame.ctx) lines.push(`CTX:${frame.ctx}`)
+  if (frame.ctx) lines.push(`CTX:${frame.ctx}`);
 
   // GDPR marker
-  lines.push(`GDPR:ART9 PHI:${frame.gdpr.phi_hash} TS:${frame.ts}`)
+  lines.push(`GDPR:ART9 PHI:${frame.gdpr.phi_hash} TS:${frame.ts}`);
 
-  return lines.join("\n")
+  return lines.join("\n");
 }

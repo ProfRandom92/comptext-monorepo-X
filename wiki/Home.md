@@ -15,30 +15,30 @@ FHIR Bundle (1,847 tokens)
 
 ## Quick Navigation
 
-| Topic | Description |
-|-------|-------------|
-| [[Getting-Started]] | Installation, quick start, first pipeline run |
-| [[Architecture]] | System design, pipeline stages, data flow |
-| [[API-Reference]] | Full API documentation with TypeScript types |
-| [[DSL-Specification]] | CompText DSL v5 format & field reference |
+| Topic                  | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| [[Getting-Started]]    | Installation, quick start, first pipeline run    |
+| [[Architecture]]       | System design, pipeline stages, data flow        |
+| [[API-Reference]]      | Full API documentation with TypeScript types     |
+| [[DSL-Specification]]  | CompText DSL v5 format & field reference         |
 | [[Clinical-Scenarios]] | 5 validated FHIR R4 scenarios (STEMI, Sepsis, …) |
-| [[GDPR-Compliance]] | GDPR Art. 5/17/25 implementation details |
-| [[Contributing]] | Dev setup, code standards, PR process |
+| [[GDPR-Compliance]]    | GDPR Art. 5/17/25 implementation details         |
+| [[Contributing]]       | Dev setup, code standards, PR process            |
 
 ---
 
 ## What CompText Does
 
 ```typescript
-import { pipeline, FHIR_STEMI, serializeFrame } from "@comptext/core"
+import { pipeline, FHIR_STEMI, serializeFrame } from "@comptext/core";
 
-const result = await pipeline(FHIR_STEMI)
+const result = await pipeline(FHIR_STEMI);
 
-console.log(result.frame.tri)                  // "P1"
-console.log(result.frame.alg[0].ag)            // "Jodkontrastmittel"
-console.log(result.benchmark.reduction_pct)    // 93.9
+console.log(result.frame.tri); // "P1"
+console.log(result.frame.alg[0].ag); // "Jodkontrastmittel"
+console.log(result.benchmark.reduction_pct); // 93.9
 
-const dsl = serializeFrame(result.frame)
+const dsl = serializeFrame(result.frame);
 // CT:v5 SC:STEMI TRI:P1
 // VS[hr:118 sbp:82↓↓ spo2:91↓]
 // LAB[hsTnI:4847ng/L↑↑ ckmb:48.7µg/L↑↑]
@@ -59,15 +59,15 @@ const dsl = serializeFrame(result.frame)
 
 ## Token Benchmarks
 
-| Scenario | FHIR Raw | NURSE | KVTC | CompText | Reduction |
-|----------|----------|-------|------|----------|-----------|
-| STEMI | 1,847 | 1,621 | 387 | **112** | **93.9%** |
-| Sepsis | 2,213 | 1,934 | 461 | **131** | **94.1%** |
-| Stroke | 2,041 | 1,788 | 427 | **124** | **93.9%** |
-| Anaphylaxie | 1,742 | 1,523 | 363 | **108** | **93.8%** |
-| DM Hypo | 1,963 | 1,717 | 410 | **119** | **93.9%** |
+| Scenario    | FHIR Raw | NURSE | KVTC | CompText | Reduction |
+| ----------- | -------- | ----- | ---- | -------- | --------- |
+| STEMI       | 1,847    | 1,621 | 387  | **112**  | **93.9%** |
+| Sepsis      | 2,213    | 1,934 | 461  | **131**  | **94.1%** |
+| Stroke      | 2,041    | 1,788 | 427  | **124**  | **93.9%** |
+| Anaphylaxie | 1,742    | 1,523 | 363  | **108**  | **93.8%** |
+| DM Hypo     | 1,963    | 1,717 | 410  | **119**  | **93.9%** |
 
-*Measured with tiktoken `cl100k_base` (GPT-4)*
+_Measured with tiktoken `cl100k_base` (GPT-4)_
 
 ---
 

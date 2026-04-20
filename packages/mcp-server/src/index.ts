@@ -21,13 +21,13 @@
  * ```
  */
 
-import { Server } from "@modelcontextprotocol/sdk/server/index.js"
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
   Tool,
-} from "@modelcontextprotocol/sdk/types.js"
+} from "@modelcontextprotocol/sdk/types.js";
 
 import {
   pipeline,
@@ -38,14 +38,13 @@ import {
   FHIR_STROKE,
   FHIR_ANAPHYLAXIE,
   FHIR_DM_HYPO,
-  ALL_FHIR_BUNDLES,
-  TOKEN_BENCHMARKS,
-} from "@comptext/core"
+} from "@comptext/core";
 
 const TOOLS: Tool[] = [
   {
     name: "comptext_pipeline",
-    description: "Run CompText pipeline on a FHIR R4 bundle to reduce tokens by 93-94% while preserving safety-critical information",
+    description:
+      "Run CompText pipeline on a FHIR R4 bundle to reduce tokens by 93-94% while preserving safety-critical information",
     inputSchema: {
       type: "object",
       properties: {
@@ -103,7 +102,7 @@ const TOOLS: Tool[] = [
       required: ["frame"],
     },
   },
-]
+];
 
 const server = new Server(
   {
@@ -115,19 +114,19 @@ const server = new Server(
       tools: {},
     },
   }
-)
+);
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return { tools: TOOLS }
-})
+  return { tools: TOOLS };
+});
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params
+  const { name, arguments: args } = request.params;
 
   try {
     switch (name) {
       case "comptext_pipeline": {
-        let bundle: typeof FHIR_STEMI
+        let bundle: typeof FHIR_STEMI;
 
         // Use built-in scenario if specified
         if (args?.scenario && typeof args.scenario === "string") {
@@ -137,28 +136,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             STROKE: FHIR_STROKE,
             ANAPHYLAXIE: FHIR_ANAPHYLAXIE,
             DM_HYPO: FHIR_DM_HYPO,
-          }
-          bundle = scenarios[args.scenario as string]
+          };
+          bundle = scenarios[args.scenario as string];
           if (!bundle) {
-            throw new Error(`Unknown scenario: ${args.scenario}`)
+            throw new Error(`Unknown scenario: ${args.scenario}`);
           }
         } else if (args?.bundle && typeof args.bundle === "object") {
-          bundle = args.bundle as typeof FHIR_STEMI
+          bundle = args.bundle as typeof FHIR_STEMI;
         } else {
-          throw new Error("Either 'bundle' or 'scenario' must be provided")
+          throw new Error("Either 'bundle' or 'scenario' must be provided");
         }
 
-        const result = await pipeline(bundle)
+        const result = await pipeline(bundle);
 
         const output: Record<string, unknown> = {
           frame: result.frame,
           benchmark: result.benchmark,
           input: result.input,
-        }
+        };
 
         if (args?.includeDsl !== false) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          output.dsl = serializeFrame(result.frame as any)
+          output.dsl = serializeFrame(result.frame as any);
         }
 
         return {
@@ -168,7 +167,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               text: JSON.stringify(output, null, 2),
             },
           ],
-        }
+        };
       }
 
       case "comptext_scenarios": {
@@ -218,7 +217,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             alerts: ["Glibenclamid + CKD - rebound risk"],
             tokenReduction: "93.9%",
           },
-        ]
+        ];
 
         return {
           content: [
@@ -227,28 +226,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               text: JSON.stringify({ scenarios }, null, 2),
             },
           ],
-        }
+        };
       }
 
       case "comptext_benchmark": {
-        const results = await pipelineAll()
+        const results = await pipelineAll();
 
-        const format = args?.format || "json"
+        const format = args?.format || "json";
 
         if (format === "markdown") {
-          const lines: string[] = []
-          lines.push("# CompText Token Benchmarks")
-          lines.push("")
-          lines.push("| Scenario | FHIR Raw | CompText | Reduction | Triage |")
-          lines.push("|----------|----------|----------|-----------|--------|")
+          const lines: string[] = [];
+          lines.push("# CompText Token Benchmarks");
+          lines.push("");
+          lines.push("| Scenario | FHIR Raw | CompText | Reduction | Triage |");
+          lines.push("|----------|----------|----------|-----------|--------|");
 
           for (const [id, result] of Object.entries(results)) {
             lines.push(
               `| ${id} | ${result.input.token_count} | ${result.frame.tokens || "N/A"} | ${result.benchmark.reduction_pct.toFixed(1)}% | ${result.frame.tri} |`
-            )
+            );
           }
 
-          lines.push("")
+          lines.push("");
 
           return {
             content: [
@@ -257,7 +256,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 text: lines.join("\n"),
               },
             ],
-          }
+          };
         }
 
         // JSON format
@@ -268,7 +267,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           reductionPct: result.benchmark.reduction_pct,
           triage: result.frame.tri,
           gdprCompliant: result.benchmark.gdpr_compliant,
-        }))
+        }));
 
         return {
           content: [
@@ -277,11 +276,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               text: JSON.stringify({ benchmarks: summary }, null, 2),
             },
           ],
-        }
+        };
       }
 
       case "comptext_analyze": {
-        const { frame } = args as { frame: { tri: string; alg: unknown[]; rx: unknown[]; vs: Record<string, number>; lab: Record<string, number> } }
+        const { frame } = args as {
+          frame: {
+            tri: string;
+            alg: unknown[];
+            rx: unknown[];
+            vs: Record<string, number>;
+            lab: Record<string, number>;
+          };
+        };
 
         const analysis: Record<string, unknown> = {
           triage: {
@@ -294,31 +301,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             alerts: [],
           },
           criticalValues: [],
-        }
+        };
 
         // Check for critical vital signs
         if (frame.vs) {
           if (frame.vs.sbp !== undefined && frame.vs.sbp < 90) {
-            (analysis.criticalValues as string[]).push(`Hypotension: sBP ${frame.vs.sbp} mmHg`)
+            (analysis.criticalValues as string[]).push(`Hypotension: sBP ${frame.vs.sbp} mmHg`);
           }
           if (frame.vs.spo2 !== undefined && frame.vs.spo2 < 90) {
-            (analysis.criticalValues as string[]).push(`Hypoxemia: SpO2 ${frame.vs.spo2}%`)
+            (analysis.criticalValues as string[]).push(`Hypoxemia: SpO2 ${frame.vs.spo2}%`);
           }
           if (frame.vs.hr !== undefined && frame.vs.hr > 150) {
-            (analysis.criticalValues as string[]).push(`Tachycardia: HR ${frame.vs.hr} bpm`)
+            (analysis.criticalValues as string[]).push(`Tachycardia: HR ${frame.vs.hr} bpm`);
           }
         }
 
         // Check for critical lab values
         if (frame.lab) {
           if (frame.lab.hs_tni !== undefined && frame.lab.hs_tni > 50) {
-            (analysis.criticalValues as string[]).push(`Elevated hsTroponin: ${frame.lab.hs_tni} ng/L`)
+            (analysis.criticalValues as string[]).push(
+              `Elevated hsTroponin: ${frame.lab.hs_tni} ng/L`
+            );
           }
           if (frame.lab.lactate !== undefined && frame.lab.lactate > 4) {
-            (analysis.criticalValues as string[]).push(`Elevated lactate: ${frame.lab.lactate} mmol/L`)
+            (analysis.criticalValues as string[]).push(
+              `Elevated lactate: ${frame.lab.lactate} mmol/L`
+            );
           }
           if (frame.lab.glucose !== undefined && frame.lab.glucose < 2.5) {
-            (analysis.criticalValues as string[]).push(`Severe hypoglycemia: ${frame.lab.glucose} mmol/L`)
+            (analysis.criticalValues as string[]).push(
+              `Severe hypoglycemia: ${frame.lab.glucose} mmol/L`
+            );
           }
         }
 
@@ -329,11 +342,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               text: JSON.stringify(analysis, null, 2),
             },
           ],
-        }
+        };
       }
 
       default:
-        throw new Error(`Unknown tool: ${name}`)
+        throw new Error(`Unknown tool: ${name}`);
     }
   } catch (error) {
     return {
@@ -350,12 +363,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         },
       ],
       isError: true,
-    }
+    };
   }
-})
+});
 
 // Start server
-const transport = new StdioServerTransport()
-await server.connect(transport)
+const transport = new StdioServerTransport();
+await server.connect(transport);
 
-console.error("CompText MCP Server running on stdio")
+console.error("CompText MCP Server running on stdio");
