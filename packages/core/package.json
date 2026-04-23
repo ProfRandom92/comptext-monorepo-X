@@ -22,7 +22,11 @@
       "require": "./dist/benchmarks.js"
     }
   },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup src/index.ts src/fhir.ts src/benchmarks.ts --format esm,cjs --dts --out-dir dist",
     "dev": "tsup src/index.ts --watch",
@@ -57,10 +61,12 @@
   "peerDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/akoellnberger/comptext"
+    "url": "git+https://github.com/ProfRandom92/comptext-monorepo-X.git"
   },
-  "homepage": "https://github.com/akoellnberger/comptext#readme",
+  "homepage": "https://github.com/ProfRandom92/comptext-monorepo-X#readme",
   "bugs": {
-    "url": "https://github.com/akoellnberger/comptext/issues"
-  }
+    "url": "https://github.com/ProfRandom92/comptext-monorepo-X/issues"
+  },
+  "author": "Alex Kölnberger",
+  "license": "MIT"
 }

@@ -19,5 +19,15 @@
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.3.3",
     "vite": "^5.1.0"
+  },
+  "author": "Alex Kölnberger",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProfRandom92/comptext-monorepo-X.git"
+  },
+  "homepage": "https://github.com/ProfRandom92/comptext-monorepo-X#readme",
+  "bugs": {
+    "url": "https://github.com/ProfRandom92/comptext-monorepo-X/issues"
   }
 }
