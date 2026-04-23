@@ -28,7 +28,7 @@
 ### Repository klonen
 
 ```bash
-git clone https://github.com/akoellnberger/comptext.git
+git clone https://github.com/ProfRandom92/comptext-monorepo-X.git
 cd comptext
 ```
 
@@ -157,11 +157,7 @@ comptext-monorepo/
 export async function pipeline(bundle: FHIRBundle): Promise<PipelineResult> {
   // Validierung
   if (!bundle.entry?.length) {
-    throw new CompTextError(
-      "Bundle has no entries",
-      "NO_RESOURCES",
-      { bundle_id: bundle.id }
-    )
+    throw new CompTextError("Bundle has no entries", "NO_RESOURCES", { bundle_id: bundle.id });
   }
   // ...
 }
@@ -169,7 +165,7 @@ export async function pipeline(bundle: FHIRBundle): Promise<PipelineResult> {
 // ✗ SCHLECHT: Implizite Typen, keine Kommentare
 export async function pipeline(bundle) {
   if (!bundle.entry.length) {
-    throw new Error("no entries")
+    throw new Error("no entries");
   }
   // ...
 }
@@ -177,32 +173,32 @@ export async function pipeline(bundle) {
 
 ### Namenskonventionen
 
-| Element | Konvention | Beispiel |
-|---------|------------|----------|
-| Funktionen | camelCase | `runNURSE`, `assembleFrame` |
-| Klassen | PascalCase | `CompTextError` |
-| Interfaces | PascalCase | `PipelineResult` |
-| Typen | PascalCase | `TriageClass` |
+| Element    | Konvention  | Beispiel                       |
+| ---------- | ----------- | ------------------------------ |
+| Funktionen | camelCase   | `runNURSE`, `assembleFrame`    |
+| Klassen    | PascalCase  | `CompTextError`                |
+| Interfaces | PascalCase  | `PipelineResult`               |
+| Typen      | PascalCase  | `TriageClass`                  |
 | Konstanten | UPPER_SNAKE | `LOINC_TO_KEY`, `PHI_PATTERNS` |
-| Enums | PascalCase | `ScenarioCode` |
-| Private | _präfix | `_meta`, `_pipe` |
+| Enums      | PascalCase  | `ScenarioCode`                 |
+| Private    | \_präfix    | `_meta`, `_pipe`               |
 
 ### Import-Reihenfolge
 
 ```typescript
 // 1. Built-ins (node:*)
-import { readFile } from "node:fs/promises"
+import { readFile } from "node:fs/promises";
 
 // 2. Externals
-import { describe, it, expect } from "vitest"
+import { describe, it, expect } from "vitest";
 
 // 3. Internals (absolute)
-import type { FHIRBundle } from "./data.js"
-import type { PipelineResult } from "./types/index.js"
+import type { FHIRBundle } from "./data.js";
+import type { PipelineResult } from "./types/index.js";
 
 // 4. Internals (relative)
-import { runNURSE } from "./compiler/nurse.js"
-import { runKVTC } from "./compiler/kvtc.js"
+import { runNURSE } from "./compiler/nurse.js";
+import { runKVTC } from "./compiler/kvtc.js";
 ```
 
 ### Fehlerbehandlung
@@ -214,12 +210,12 @@ if (bundle.resourceType !== "Bundle") {
     `Expected resourceType 'Bundle', got '${bundle.resourceType}'`,
     "INVALID_FHIR",
     { received: bundle.resourceType }
-  )
+  );
 }
 
 // ✗ SCHLECHT: Generischer Fehler ohne Kontext
 if (bundle.resourceType !== "Bundle") {
-  throw new Error("invalid bundle")
+  throw new Error("invalid bundle");
 }
 ```
 
@@ -227,21 +223,21 @@ if (bundle.resourceType !== "Bundle") {
 
 ```typescript
 // ✓ GUT: Template-Literals
-const compact = `${pair.display}:${value}${targetUnit}${pair.interp ?? ""}`
+const compact = `${pair.display}:${value}${targetUnit}${pair.interp ?? ""}`;
 
 // ✗ SCHLECHT: String-Konkatenation
-const compact = pair.display + ":" + value + targetUnit + (pair.interp || "")
+const compact = pair.display + ":" + value + targetUnit + (pair.interp || "");
 ```
 
 ### Null-Checks
 
 ```typescript
 // ✓ GUT: Optional chaining + nullish coalescing
-const loinc = obs.code.coding?.[0]?.code ?? obs.id
-const display = (sanitizedCodeText as string) ?? obs.code.coding?.[0]?.display
+const loinc = obs.code.coding?.[0]?.code ?? obs.id;
+const display = (sanitizedCodeText as string) ?? obs.code.coding?.[0]?.display;
 
 // ✗ SCHLECHT: Potenzielle Null-Pointer
-const loinc = obs.code.coding[0].code
+const loinc = obs.code.coding[0].code;
 ```
 
 ---
@@ -255,57 +251,57 @@ describe("Feature Name", () => {
   // Setup (wenn nötig)
   beforeEach(() => {
     // Reset state
-  })
+  });
 
   describe("Sub-Feature", () => {
     it("sollte erwartetes Verhalten zeigen", () => {
       // Arrange
-      const input = createTestInput()
+      const input = createTestInput();
 
       // Act
-      const result = functionUnderTest(input)
+      const result = functionUnderTest(input);
 
       // Assert
-      expect(result).toBe(expected)
-    })
+      expect(result).toBe(expected);
+    });
 
     it("sollte Fehler bei ungültigem Input werfen", () => {
       // Arrange
-      const invalidInput = null
+      const invalidInput = null;
 
       // Act + Assert
       expect(() => functionUnderTest(invalidInput))
         .toThrow(CompTextError)
-        .toHaveProperty("code", "INVALID_FHIR")
-    })
-  })
-})
+        .toHaveProperty("code", "INVALID_FHIR");
+    });
+  });
+});
 ```
 
 ### Test-Namenskonventionen
 
 ```typescript
 // ✓ GUT: Beschreibend, aktive Form
-it("removes PHI fields from Patient resource", () => { })
-it("returns P1 triage for STEMI with cardiogenic shock", () => { })
-it("flags Rivaroxaban with LYSE-KI annotation", () => { })
+it("removes PHI fields from Patient resource", () => {});
+it("returns P1 triage for STEMI with cardiogenic shock", () => {});
+it("flags Rivaroxaban with LYSE-KI annotation", () => {});
 
 // ✗ SCHLECHT: Vage, passiv
-it("works correctly", () => { })
-it("should do something", () => { })
-it("test 1", () => { })
+it("works correctly", () => {});
+it("should do something", () => {});
+it("test 1", () => {});
 ```
 
 ### Test-Abdeckung
 
 Mindestanforderungen:
 
-| Modul | Minimale Coverage |
-|-------|-------------------|
-| NURSE | 90% |
-| KVTC | 85% |
-| Triage | 90% |
-| Pipeline | 95% |
+| Modul    | Minimale Coverage |
+| -------- | ----------------- |
+| NURSE    | 90%               |
+| KVTC     | 85%               |
+| Triage   | 90%               |
+| Pipeline | 95%               |
 
 ### Test-Kategorien
 
@@ -313,31 +309,30 @@ Mindestanforderungen:
 // 1. Unit Tests (isoliert)
 describe("NURSE Stage", () => {
   it("removes PHI fields", () => {
-    const result = runNURSE(FHIR_STEMI)
-    expect(result.resources.find(r => r.type === "Patient")).not.toHaveProperty("name")
-  })
-})
+    const result = runNURSE(FHIR_STEMI);
+    expect(result.resources.find((r) => r.type === "Patient")).not.toHaveProperty("name");
+  });
+});
 
 // 2. Integration Tests (Stage-Kombination)
 describe("Full Pipeline", () => {
   it("runs all stages correctly", async () => {
-    const result = await pipeline(FHIR_STEMI)
-    expect(result.frame.tri).toBe("P1")
-    expect(result.benchmark.gdpr_compliant).toBe(true)
-  })
-})
+    const result = await pipeline(FHIR_STEMI);
+    expect(result.frame.tri).toBe("P1");
+    expect(result.benchmark.gdpr_compliant).toBe(true);
+  });
+});
 
 // 3. Edge Cases
 describe("Edge Cases", () => {
   it("handles empty bundle", () => {
-    expect(() => pipeline({ resourceType: "Bundle", entry: [] }))
-      .toThrow(CompTextError)
-  })
+    expect(() => pipeline({ resourceType: "Bundle", entry: [] })).toThrow(CompTextError);
+  });
 
   it("handles duplicate LOINC codes", () => {
     // ...
-  })
-})
+  });
+});
 ```
 
 ### Test-Daten
@@ -345,25 +340,25 @@ describe("Edge Cases", () => {
 Verwenden Sie eingebaute Test-Daten:
 
 ```typescript
-import { FHIR_STEMI, FHIR_SEPSIS, FHIR_STROKE } from "../src/index.js"
+import { FHIR_STEMI, FHIR_SEPSIS, FHIR_STROKE } from "../src/index.js";
 
 // Oder kopieren für Modifikationen
-const customBundle = JSON.parse(JSON.stringify(FHIR_STEMI))
-customBundle.entry[0].resource.name[0].given = ["Custom"]
+const customBundle = JSON.parse(JSON.stringify(FHIR_STEMI));
+customBundle.entry[0].resource.name[0].given = ["Custom"];
 ```
 
 ### Mocking
 
 ```typescript
 // Datum mocken für deterministische Tests
-const originalDate = Date.now
+const originalDate = Date.now;
 beforeEach(() => {
-  Date.now = () => 1710509000000 // Festes Datum
-})
+  Date.now = () => 1710509000000; // Festes Datum
+});
 
 afterEach(() => {
-  Date.now = originalDate
-})
+  Date.now = originalDate;
+});
 ```
 
 ---
@@ -384,6 +379,7 @@ git checkout -b docs/api-verbesserung
 ```
 
 **Branch-Namen:**
+
 - `feature/*` — Neue Features
 - `fix/*` — Bugfixes
 - `docs/*` — Dokumentation
@@ -403,6 +399,7 @@ git checkout -b docs/api-verbesserung
 ```
 
 **Typen:**
+
 - `feat:` — Neue Feature
 - `fix:` — Bugfix
 - `docs:` — Dokumentation
@@ -460,6 +457,7 @@ npm run benchmark
 ```
 
 **Checkliste:**
+
 - [ ] Alle Tests bestehen
 - [ ] Keine Type-Errors
 - [ ] Build erfolgreich
@@ -471,9 +469,11 @@ npm run benchmark
 
 ```markdown
 ## Beschreibung
+
 Kurze Beschreibung der Änderungen.
 
 ## Änderungstyp
+
 - [ ] Bugfix
 - [ ] Feature
 - [ ] Breaking Change
@@ -482,23 +482,27 @@ Kurze Beschreibung der Änderungen.
 - [ ] Performance
 
 ## Tests
+
 - [ ] Tests hinzugefügt/aktualisiert
 - [ ] Alle Tests bestehen
 - [ ] Coverage eingehalten
 
 ## Checkliste
+
 - [ ] Code folgt Style-Guide
 - [ ] Dokumentation aktualisiert
 - [ ] CHANGELOG.md aktualisiert
 - [ ] Keine Breaking Changes (oder dokumentiert)
 
 ## Breaking Changes
+
 Falls ja, beschreiben:
 ```
 
 ### 5. Review-Prozess
 
 **Reviewer-Checkliste:**
+
 - [ ] Code-Qualität OK
 - [ ] Tests ausreichend
 - [ ] Dokumentation verständlich
@@ -507,6 +511,7 @@ Falls ja, beschreiben:
 - [ ] Safety-Critical Fields erhalten (bei Kompression)
 
 **Review-Zyklen:**
+
 1. Autor erstellt PR
 2. Reviewer prüft (max. 48h)
 3. Feedback-Loop
@@ -538,26 +543,34 @@ Semantic Versioning: `MAJOR.MINOR.PATCH`
 ### Release-Checkliste
 
 1. **Version bump:**
+
    ```bash
    npm version [major|minor|patch]
    ```
 
 2. **Changelog aktualisieren:**
+
    ```markdown
    ## [5.1.0] - 2024-03-20
+
    ### Added
+
    - Neue LOINC-Codes für Trauma
+
    ### Fixed
+
    - PHI-Regex für Mobilnummern verbessert
    ```
 
 3. **Tag erstellen:**
+
    ```bash
    git tag -a v5.1.0 -m "Release 5.1.0"
    git push origin v5.1.0
    ```
 
 4. **NPM publishen:**
+
    ```bash
    cd packages/core
    npm publish --access public
@@ -626,15 +639,15 @@ debug() {
 ```typescript
 // In Entwicklung
 if (process.env.DEBUG?.includes("comptext:")) {
-  console.log("[NURSE] Processing bundle:", bundle.id)
+  console.log("[NURSE] Processing bundle:", bundle.id);
 }
 
 // Nie PHI loggen!
 // ✗ SCHLECHT:
-console.log("Patient:", patient.name) // NEVER!
+console.log("Patient:", patient.name); // NEVER!
 
 // ✓ GUT:
-console.log("Patient hash:", patientHash) // OK
+console.log("Patient hash:", patientHash); // OK
 ```
 
 ---
@@ -703,10 +716,10 @@ Vielen Dank für Ihr Interesse an CompText! Wir freuen uns über:
 
 ## Kontakt
 
-- **Autor:** Alex Köllnberger
+- **Autor:** Alex Kölnberger
 - **E-Mail:** alex@example.com
-- **GitHub:** https://github.com/akoellnberger/comptext
-- **Issues:** https://github.com/akoellnberger/comptext/issues
+- **GitHub:** https://github.com/ProfRandom92/comptext-monorepo-X
+- **Issues:** https://github.com/ProfRandom92/comptext-monorepo-X/issues
 
 ---
 
