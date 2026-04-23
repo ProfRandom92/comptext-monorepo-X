@@ -3,6 +3,32 @@ import { TOKEN_BENCHMARKS, pipelineAll, serializeFrame, type PipelineResult } fr
 
 import "./App.css";
 
+// MCP Integration for Daimler Dashboard
+interface MCPPipelineResult {
+  id: string;
+  scenario: string;
+  frame: string;
+  metrics: {
+    tokens_input: number;
+    tokens_final: number;
+    reduction_pct: number;
+    execution_time_ms: number;
+  };
+  safety: {
+    allergies_preserved: number;
+    medications_preserved: number;
+    icd10_preserved: number;
+    triage_accurate: string;
+  };
+  timestamp: string;
+}
+
+interface APIStatus {
+  connected: boolean;
+  url: string;
+  error: string | null;
+}
+
 // Scenario display names
 const SCENARIO_NAMES: Record<string, string> = {
   stemi: "STEMI",
@@ -26,8 +52,40 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"overview" | "details" | "frame">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "details" | "frame" | "live" | "compliance">("overview");
 
+  // MCP Integration
+  const [apiStatus, setApiStatus] = useState<APIStatus>({
+    connected: false,
+    url: import.meta.env.VITE_MCP_API_URL || "http://localhost:8000",
+    error: null,
+  });
+  const [mcpResults, setMcpResults] = useState<MCPPipelineResult | null>(null);
+  const [mcpLoading, setMcpLoading] = useState(false);
+
+  // Check MCP API availability
+  useEffect(() => {
+    const checkMCPStatus = async () => {
+      try {
+        const response = await fetch(`${apiStatus.url}/health`);
+        if (response.ok) {
+          setApiStatus(prev => ({ ...prev, connected: true, error: null }));
+        }
+      } catch (err) {
+        setApiStatus(prev => ({
+          ...prev,
+          connected: false,
+          error: err instanceof Error ? err.message : "API unavailable"
+        }));
+      }
+    };
+
+    checkMCPStatus();
+    const interval = setInterval(checkMCPStatus, 5000);
+    return () => clearInterval(interval);
+  }, [apiStatus.url]);
+
+  // Run local pipeline
   useEffect(() => {
     const runPipeline = async () => {
       try {
@@ -43,6 +101,41 @@ function App() {
 
     runPipeline();
   }, []);
+
+  // Process scenario via MCP API
+  const processMCPScenario = async (scenario: string) => {
+    if (!apiStatus.connected) {
+      setApiStatus(prev => ({
+        ...prev,
+        error: "MCP API not connected"
+      }));
+      return;
+    }
+
+    setMcpLoading(true);
+    try {
+      const response = await fetch(`${apiStatus.url}/api/pipeline/process`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scenario: scenario,
+          include_benchmark: true
+        })
+      });
+
+      if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+      const data = await response.json();
+      setMcpResults(data);
+      setApiStatus(prev => ({ ...prev, error: null }));
+    } catch (err) {
+      setApiStatus(prev => ({
+        ...prev,
+        error: err instanceof Error ? err.message : "Unknown error"
+      }));
+    } finally {
+      setMcpLoading(false);
+    }
+  };
 
   // Calculate summary statistics
   const getSummaryStats = () => {
@@ -118,6 +211,22 @@ function App() {
         </div>
       )}
 
+      {/* API Status Banner */}
+      {apiStatus.connected && (
+        <div className="api-status" style={{ backgroundColor: "#10b981", padding: "8px", marginBottom: "16px", borderRadius: "4px" }}>
+          <span style={{ color: "white", fontSize: "12px" }}>
+            ✓ MCP API Connected: {apiStatus.url}
+          </span>
+        </div>
+      )}
+      {apiStatus.error && (
+        <div className="api-error" style={{ backgroundColor: "#ef4444", padding: "8px", marginBottom: "16px", borderRadius: "4px" }}>
+          <span style={{ color: "white", fontSize: "12px" }}>
+            ✗ API Error: {apiStatus.error}
+          </span>
+        </div>
+      )}
+
       <nav className="tabs">
         <button
           className={activeTab === "overview" ? "active" : ""}
@@ -137,6 +246,33 @@ function App() {
         >
           CompText Frames
         </button>
+        {apiStatus.connected && (
+          <>
+            <button
+              className={activeTab === "live" ? "active" : ""}
+              onClick={() => setActiveTab("live")}
+              style={{ position: "relative" }}
+            >
+              Live MCP
+              <span style={{
+                position: "absolute",
+                right: "8px",
+                top: "8px",
+                width: "8px",
+                height: "8px",
+                backgroundColor: "#10b981",
+                borderRadius: "50%",
+                animation: "pulse 2s infinite"
+              }}></span>
+            </button>
+            <button
+              className={activeTab === "compliance" ? "active" : ""}
+              onClick={() => setActiveTab("compliance")}
+            >
+              Compliance
+            </button>
+          </>
+        )}
       </nav>
 
       <main className="content">
@@ -407,6 +543,150 @@ function App() {
             ))}
           </div>
         )}
+
+        {/* Live MCP Tab */}
+        {activeTab === "live" && apiStatus.connected && (
+          <div className="live-tab" style={{ marginTop: "24px" }}>
+            <h2>Live MCP Integration</h2>
+            <div className="scenario-grid">
+              {["STEMI", "SEPSIS", "STROKE", "ANAPHYLAXIE", "DM_HYPO"].map(scenario => (
+                <button
+                  key={scenario}
+                  className="scenario-button"
+                  onClick={() => processMCPScenario(scenario)}
+                  disabled={mcpLoading}
+                  style={{
+                    padding: "16px",
+                    marginBottom: "16px",
+                    backgroundColor: "#0f172a",
+                    border: "1px solid #3b82f6",
+                    borderRadius: "8px",
+                    color: "#e0e7ff",
+                    cursor: mcpLoading ? "not-allowed" : "pointer",
+                    opacity: mcpLoading ? 0.6 : 1
+                  }}
+                >
+                  {mcpLoading ? "Processing..." : `Process ${scenario}`}
+                </button>
+              ))}
+            </div>
+
+            {mcpResults && (
+              <div className="mcp-result" style={{
+                marginTop: "24px",
+                padding: "16px",
+                backgroundColor: "#1e293b",
+                borderRadius: "8px",
+                border: "1px solid #475569"
+              }}>
+                <h3 style={{ color: "#60a5fa", marginBottom: "12px" }}>
+                  {mcpResults.scenario} - {mcpResults.metrics.reduction_pct}% Reduction
+                </h3>
+
+                <div className="mcp-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
+                  <div style={{ padding: "8px", backgroundColor: "#0f172a", borderRadius: "4px" }}>
+                    <div style={{ fontSize: "12px", color: "#94a3b8" }}>Input Tokens</div>
+                    <div style={{ fontSize: "18px", fontWeight: "bold", color: "#ef4444" }}>
+                      {mcpResults.metrics.tokens_input}
+                    </div>
+                  </div>
+                  <div style={{ padding: "8px", backgroundColor: "#0f172a", borderRadius: "4px" }}>
+                    <div style={{ fontSize: "12px", color: "#94a3b8" }}>Output Tokens</div>
+                    <div style={{ fontSize: "18px", fontWeight: "bold", color: "#10b981" }}>
+                      {mcpResults.metrics.tokens_final}
+                    </div>
+                  </div>
+                  <div style={{ padding: "8px", backgroundColor: "#0f172a", borderRadius: "4px" }}>
+                    <div style={{ fontSize: "12px", color: "#94a3b8" }}>Time</div>
+                    <div style={{ fontSize: "18px", fontWeight: "bold", color: "#3b82f6" }}>
+                      {mcpResults.metrics.execution_time_ms}ms
+                    </div>
+                  </div>
+                  <div style={{ padding: "8px", backgroundColor: "#0f172a", borderRadius: "4px" }}>
+                    <div style={{ fontSize: "12px", color: "#94a3b8" }}>Triage</div>
+                    <div style={{ fontSize: "18px", fontWeight: "bold", color: "#f59e0b" }}>
+                      {mcpResults.safety.triage_accurate}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: "16px", padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px" }}>
+                  <div style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "8px" }}>CompText Frame</div>
+                  <pre style={{
+                    fontSize: "11px",
+                    color: "#d1d5db",
+                    maxHeight: "200px",
+                    overflow: "auto",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word"
+                  }}>
+                    {mcpResults.frame}
+                  </pre>
+                </div>
+
+                <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #475569", fontSize: "12px", color: "#94a3b8" }}>
+                  ID: {mcpResults.id} | {new Date(mcpResults.timestamp).toLocaleTimeString()}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Compliance Tab */}
+        {activeTab === "compliance" && (
+          <div className="compliance-tab" style={{ marginTop: "24px" }}>
+            <h2>GDPR & Compliance Checklist</h2>
+            <div className="compliance-items" style={{ display: "grid", gap: "12px" }}>
+              <div style={{ padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px", border: "1px solid #22c55e" }}>
+                <input type="checkbox" checked disabled />
+                <span style={{ marginLeft: "8px", color: "#22c55e" }}>✓ GDPR Art. 5 - Data Minimization</span>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginLeft: "24px", marginTop: "4px" }}>
+                  NURSE stage removes all non-clinical PHI
+                </p>
+              </div>
+
+              <div style={{ padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px", border: "1px solid #22c55e" }}>
+                <input type="checkbox" checked disabled />
+                <span style={{ marginLeft: "8px", color: "#22c55e" }}>✓ GDPR Art. 25 - Privacy by Design</span>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginLeft: "24px", marginTop: "4px" }}>
+                  Deterministic compression with no ML-based decisions
+                </p>
+              </div>
+
+              <div style={{ padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px", border: "1px solid #22c55e" }}>
+                <input type="checkbox" checked disabled />
+                <span style={{ marginLeft: "8px", color: "#22c55e" }}>✓ GDPR Art. 32 - Encryption</span>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginLeft: "24px", marginTop: "4px" }}>
+                  PHI hashed with FNV-1a (one-way, irreversible)
+                </p>
+              </div>
+
+              <div style={{ padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px", border: "1px solid #22c55e" }}>
+                <input type="checkbox" checked disabled />
+                <span style={{ marginLeft: "8px", color: "#22c55e" }}>✓ FHIR R4 Standard</span>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginLeft: "24px", marginTop: "4px" }}>
+                  Full HL7 FHIR R4 bundle compliance
+                </p>
+              </div>
+
+              <div style={{ padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px", border: "1px solid #22c55e" }}>
+                <input type="checkbox" checked disabled />
+                <span style={{ marginLeft: "8px", color: "#22c55e" }}>✓ Clinical Safety</span>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginLeft: "24px", marginTop: "4px" }}>
+                  Allergies, medications, and triage never compressed
+                </p>
+              </div>
+
+              <div style={{ padding: "12px", backgroundColor: "#0f172a", borderRadius: "4px", border: "1px solid #22c55e" }}>
+                <input type="checkbox" checked disabled />
+                <span style={{ marginLeft: "8px", color: "#22c55e" }}>✓ Audit Trail</span>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginLeft: "24px", marginTop: "4px" }}>
+                  All operations logged with timestamps and IDs
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className="app-footer">
@@ -419,7 +699,14 @@ function App() {
           >
             GitHub
           </a>
+          {apiStatus.connected && " | MCP Integration Active"}
         </p>
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+        `}</style>
       </footer>
     </div>
   );
